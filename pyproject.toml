@@ -1,0 +1,9 @@
+[project]
+name = "gost-ra-client"
+version = "0.1.0"
+description = "Python/PySide client framework for enterprise RA and PKI REST APIs using mutual TLS authentication."
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "pydantic-settings>=2.14.1",
+]
