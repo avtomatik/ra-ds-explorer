@@ -4,6 +4,7 @@ from typing import Any, Mapping, Optional
 from urllib.parse import urlencode
 
 from gostra.transport.config import Settings
+from gostra.transport.exceptions import CurlExecutionError
 from gostra.transport.response import HttpResponse
 
 
@@ -31,12 +32,54 @@ class CryptoProCurlTransport:
             "-i",
             "-w",
             "\nHTTP_STATUS:%{http_code}",
+            "-X",
+            method.upper(),
             url,
         ]
 
-        result = subprocess.run(cmd, capture_output=True, text=True)
-        raw, status_part = result.stdout.rsplit("HTTP_STATUS", 1)
+        if headers:
+            for key, value in headers.items():
+                cmd.extend(["-H", f"{key}: {value}"])
 
+        if json_data is not None:
+            cmd.extend(
+                [
+                    "-H",
+                    "Content-Type: application/json",
+                    "-d",
+                    json.dumps(json_data),
+                ]
+            )
+
+        if self.settings.debug_http:
+            print("CMD:", cmd)
+
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=self.settings.timeout,
+            check=False,
+        )
+
+        if self.settings.debug_http and result.stderr:
+            print("STDERR:", result.stderr)
+
+        if result.returncode != 0:
+            raise CurlExecutionError(
+                f"curl exited with code {result.returncode}\n"
+                f"STDOUT:\n{result.stdout}\n"
+                f"STDERR:\n{result.stderr}"
+            )
+
+        try:
+            raw, status_part = result.stdout.rsplit("HTTP_STATUS:", 1)
+        except ValueError:
+            raise CurlExecutionError(
+                "Unable to parse HTTP status from curl output.\n"
+                f"STDOUT:\n{result.stdout}\n"
+                f"STDERR:\n{result.stderr}"
+            )
         status_code = int(status_part.strip())
 
         try:
@@ -70,6 +113,6 @@ class CryptoProCurlTransport:
         url = f"{base}/{path}"
 
         if params:
-            url += "?" + urlencode(params)
+            url += "?" + urlencode(params, doseq=True)
 
         return url
