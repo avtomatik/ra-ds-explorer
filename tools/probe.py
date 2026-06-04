@@ -1,8 +1,9 @@
 import argparse
 import json
 
-from gostra.transport.config import Settings
-from gostra.transport.cryptopro_curl import CryptoProCurlTransport
+from gostra.config.settings import Settings
+from gostra.infrastructure.transport.cryptopro_curl import \
+    CryptoProCurlTransport
 
 
 def main():

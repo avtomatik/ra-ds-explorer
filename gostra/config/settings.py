@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from pydantic import HttpUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -23,7 +24,7 @@ class Settings(BaseSettings):
     # =========================================================================
     # API
     # =========================================================================
-    api_base_url: str
+    api_base_url: HttpUrl
     api_version: str = "1.0"
 
     # =========================================================================

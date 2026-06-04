@@ -3,9 +3,9 @@ import subprocess
 from typing import Any, Mapping, Optional
 from urllib.parse import urlencode
 
-from gostra.transport.config import Settings
-from gostra.transport.exceptions import CurlExecutionError
-from gostra.transport.response import HttpResponse
+from gostra.config.settings import Settings
+from gostra.infrastructure.transport.exceptions import CurlExecutionError
+from gostra.infrastructure.transport.response import HttpResponse
 
 
 class CryptoProCurlTransport:
