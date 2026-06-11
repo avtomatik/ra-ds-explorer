@@ -1,16 +1,26 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-VERSION=$(./ci/release/version.sh)
+export DOCKER_BUILDKIT=0
+export BUILDKIT_PROGRESS=plain
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+
+VERSION="$(./ci/release/version.sh)"
 IMAGE="gostra:${VERSION}"
 
 echo "[BUILD] version: $VERSION"
 
-uv lock --check
+./ci/validate/lock_check.sh
 
+echo "[BUILD] context: $ROOT_DIR"
+
+# docker build --no-cache \
 docker build \
-  --no-cache \
+  --network=default \
+  --pull=false \
   -t "$IMAGE" \
-  .
+  -f "$ROOT_DIR/docker/Dockerfile" \
+  "$ROOT_DIR"
 
 echo "[DONE] built $IMAGE"

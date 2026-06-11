@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT_DIR"
+
 test -f pyproject.toml
 test -f uv.lock
-test -f Dockerfile
+test -f docker/Dockerfile
 
 echo "[OK] repo structure valid"

@@ -8,5 +8,7 @@ dependencies = [
     "cryptography>=48.0.0",
     "fastapi>=0.136.3",
     "pydantic-settings>=2.14.1",
+    "pytest>=9.0.3",
+    "ruff>=0.15.16",
     "uvicorn>=0.48.0",
 ]
