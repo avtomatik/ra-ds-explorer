@@ -6,5 +6,7 @@ CERT_REQUESTS = f"{API_PREFIX}/certRequests"
 TEMPLATES = f"{API_PREFIX}/templates"
 
 
-def certificate_by_id(cert_id: str) -> str:
-    return f"{CERTIFICATES}/{cert_id}"
+def certificate_by_serial(
+    serial: str,
+) -> str:
+    return f"{CERTIFICATES}/serialNumber/{serial}"

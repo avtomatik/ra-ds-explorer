@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     # =========================================================================
     curl_path: Path
     cert_thumbprint: str
+    transport: str
     timeout: int = 30
     verify_tls: bool = False
 

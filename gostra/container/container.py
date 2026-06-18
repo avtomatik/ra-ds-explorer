@@ -1,7 +1,7 @@
 from functools import lru_cache
 
+from gostra.api.client import GostRAClient
 from gostra.application.certificate_service import CertificateService
-from gostra.application.search_service import SearchService
 from gostra.config.settings import Settings
 from gostra.infrastructure.transport.cryptopro_curl import \
     CryptoProCurlTransport
@@ -10,13 +10,11 @@ from gostra.infrastructure.transport.cryptopro_curl import \
 class Container:
     def __init__(self):
         self._settings = Settings()
-        self._transport = CryptoProCurlTransport(self._settings)
+        transport = CryptoProCurlTransport(self._settings)
+        self._client = GostRAClient(transport)
 
     def certificate_service(self):
-        return CertificateService(self._transport)
-
-    def search_service(self):
-        return SearchService(self._transport)
+        return CertificateService(self._client)
 
 
 @lru_cache

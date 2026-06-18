@@ -1,20 +1,10 @@
-from gostra.domain.models.certificate import Certificate
-from gostra.infrastructure.transport.base import BaseTransport
-
-
 class CertificateService:
-    def __init__(self, transport: BaseTransport):
-        self.transport = transport
 
-    def get_certificate(self, cert_id: str):
-        resp = self.transport.get(f"/certificates/{cert_id}")
+    def __init__(self, api_client):
+        self.api = api_client
 
-        if not resp.ok:
-            raise Exception("Failed to fetch certificate")
+    def list_certificates(self):
+        return self.api.certificates.list()
 
-        data = resp.json_data
-        return Certificate(
-            id=data["id"],
-            owner=data["owner"],
-            raw=data,
-        )
+    def get_certificate(self, serial: str):
+        return self.api.certificates.get_by_serial(serial)
