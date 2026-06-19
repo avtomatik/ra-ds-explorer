@@ -18,6 +18,7 @@ class FixtureRouter:
             return self.store.load("certificates")
 
         if path.startswith("/api/ra/certificates/serialNumber/"):
-            return self.store.load("certificate_detail")
+            serial = path.rsplit("/", 1)[1]
+            return self.store.load_detail(serial)
 
         raise KeyError(f"No fixture for {method} {path}")

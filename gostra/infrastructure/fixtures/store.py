@@ -12,3 +12,9 @@ class FixtureStore:
 
         with path.open("r", encoding="utf-8") as f:
             return json.load(f)
+
+    def load_detail(self, serial: str) -> dict:
+        path = self.root / "certificate_details" / f"{serial}.json"
+
+        with path.open("r", encoding="utf-8") as f:
+            return json.load(f)
