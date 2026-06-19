@@ -5,11 +5,26 @@ from gostra.container.container import get_container
 router = APIRouter()
 
 
-@router.get("/certificates/{cert_id}")
-def get_certificate(cert_id: str):
+@router.get("/certificates")
+def certificates():
     container = get_container()
     service = container.certificate_service()
-    return service.get_certificate(cert_id)
+    return service.list_certificates()
+
+
+@router.get("/certificates/{serial}")
+def get_certificate(serial: str):
+    container = get_container()
+    service = container.certificate_service()
+    return service.get_certificate(serial)
+
+
+@router.get("/users")
+def users(): ...
+
+
+@router.get("/certRequests")
+def certRequests(): ...
 
 
 @router.get("/health")

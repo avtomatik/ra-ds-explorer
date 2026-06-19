@@ -18,10 +18,17 @@ class FixtureTransport:
         headers=None,
     ):
 
-        payload = self.router.resolve(
-            method,
-            path,
-        )
+        try:
+            payload = self.router.resolve(method, path)
+
+        except FileNotFoundError:
+
+            return HttpResponse(
+                status_code=404,
+                headers={},
+                body="Not found",
+                json_data=None,
+            )
 
         return HttpResponse(
             status_code=200,

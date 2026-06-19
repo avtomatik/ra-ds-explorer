@@ -13,7 +13,13 @@ parse_users(json.loads((root / "users.json").read_text()))
 parse_cert_requests(json.loads((root / "cert_requests.json").read_text()))
 
 parse_certificate_detail(
-    json.loads((root / "certificate_detail.json").read_text())
+    json.loads(
+        (
+            root
+            / "certificate_details"
+            / "014A99A46D4DA7FF824147754A019E25E7.json"
+        ).read_text()
+    )
 )
 
 print("OK")

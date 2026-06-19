@@ -1,7 +1,13 @@
+from enum import StrEnum
 from pathlib import Path
 
 from pydantic import HttpUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class TransportMode(StrEnum):
+    CURL = "curl"
+    FIXTURE = "fixture"
 
 
 class Settings(BaseSettings):
@@ -18,7 +24,9 @@ class Settings(BaseSettings):
     # =========================================================================
     curl_path: Path
     cert_thumbprint: str
-    transport: str
+
+    transport: TransportMode = TransportMode.FIXTURE
+
     timeout: int = 30
     verify_tls: bool = False
 

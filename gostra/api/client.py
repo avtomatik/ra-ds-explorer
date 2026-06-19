@@ -1,8 +1,9 @@
 from gostra.api.endpoints import (CERT_REQUESTS, CERTIFICATES, USERS,
                                   certificate_by_serial)
 from gostra.api.pagination import paginate
-from gostra.api.parsers import (parse_cert_requests, parse_certificate_detail,
-                                parse_certificates, parse_users)
+from gostra.api.parsers import (parse_cert_request, parse_cert_requests,
+                                parse_certificate_detail, parse_certificates,
+                                parse_user, parse_users)
 
 
 class CertificatesApi:
@@ -31,6 +32,10 @@ class CertificatesApi:
         response = self.transport.get(certificate_by_serial(serial))
         return parse_certificate_detail(response.json_data)
 
+    def search(self, query):
+        response = self.transport.get(CERTIFICATES, params={"search": query})
+        return parse_certificates(response.json_data)
+
 
 class UsersApi:
 
@@ -41,6 +46,10 @@ class UsersApi:
         response = self.transport.get(USERS)
         return parse_users(response.json_data)
 
+    def get(self, user_id):
+        response = self.transport.get(f"{USERS}/{user_id}")
+        return parse_user(response.json_data)
+
 
 class CertRequestsApi:
 
@@ -50,6 +59,10 @@ class CertRequestsApi:
     def list(self):
         response = self.transport.get(CERT_REQUESTS)
         return parse_cert_requests(response.json_data)
+
+    def get(self, cert_request_id):
+        response = self.transport.get(f"{CERT_REQUESTS}/{cert_request_id}")
+        return parse_cert_request(response.json_data)
 
 
 class GostRAClient:
