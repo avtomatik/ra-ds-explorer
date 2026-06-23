@@ -1,12 +1,8 @@
-import pytest
+def test_get_certificate(client, serial):
 
-from gostra.application.certificate_service import CertificateService
+    cert = client.certificates.get_by_serial(serial)
 
-
-@pytest.mark.skip
-def test_get_certificate():
-    transport = ""
-    service = CertificateService(transport)
-    response = service.get_certificate("dummy_id")
-    assert response.id == "dummy"
-    assert response.owner == "test-user"
+    assert cert.id == "019e25e7-75ee-42fc-9046-aeed792aec4b"
+    assert cert.user_id == "019e25e7-5dac-4aac-b5d5-7bf83a396f9f"
+    # assert cert.subject == ""
+    # assert cert.issuer == ""

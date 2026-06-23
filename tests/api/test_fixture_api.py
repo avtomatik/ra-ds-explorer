@@ -1,6 +1,3 @@
-import pytest
-
-
 def test_cert_requests_list(client):
 
     result = client.cert_requests.list()
@@ -15,7 +12,6 @@ def test_certificates_list(client):
     assert len(result.items) > 0
 
 
-@pytest.mark.xfail
 def test_certificates_iter_all(client):
 
     certs = list(client.certificates.iter_all())

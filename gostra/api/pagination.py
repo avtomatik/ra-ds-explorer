@@ -1,13 +1,29 @@
 def paginate(first_page, fetch_page):
     page = first_page
+    visited = set()
 
-    while True:
+    while page:
+        for item in getattr(page, "items", []):
+            yield item
 
-        yield from page.items
+        links = getattr(page, "links", None)
 
-        next_link = page.links.next
+        if not links:
+            break
+
+        next_link = getattr(links, "next", None)
 
         if not next_link:
             break
 
-        page = fetch_page(next_link.href)
+        href = getattr(next_link, "href", None)
+
+        if not href:
+            break
+
+        if href in visited:
+            raise RuntimeError(f"Pagination loop detected: {href}")
+
+        visited.add(href)
+
+        page = fetch_page(href)

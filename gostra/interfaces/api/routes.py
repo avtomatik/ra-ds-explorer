@@ -21,7 +21,7 @@ exporter = XLSXExporter()
 def certificates():
     container = get_container()
     service = container.certificate_service()
-    return service.list_certificates()
+    return service.list_certificates().model_dump(by_alias=True)
 
 
 @router.get("/certificates/{serial}")
@@ -32,11 +32,17 @@ def get_certificate(serial: str):
 
 
 @router.get("/users")
-def users(): ...
+def users():
+    container = get_container()
+    service = container.user_service()
+    return service.list_users().model_dump(by_alias=True)
 
 
 @router.get("/certRequests")
-def certRequests(): ...
+def cert_requests():
+    container = get_container()
+    service = container.cert_request_service()
+    return service.list_requests().model_dump(by_alias=True)
 
 
 @router.get("/health")

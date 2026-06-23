@@ -4,6 +4,7 @@ from gostra.api.pagination import paginate
 from gostra.api.parsers import (parse_cert_request, parse_cert_requests,
                                 parse_certificate_detail, parse_certificates,
                                 parse_user, parse_users)
+from gostra.application.exceptions import APIContractError
 
 
 class CertificatesApi:
@@ -13,16 +14,22 @@ class CertificatesApi:
 
     def list(self):
         response = self.transport.get(CERTIFICATES)
-        return parse_certificates(response.json_data)
+
+        try:
+            return parse_certificates(response.json_data)
+        except Exception:
+            raise APIContractError("Unexpected Response for Certificate Model")
 
     def _fetch_href(self, href: str):
         response = self.transport.get(href)
-        return parse_certificates(response.json_data)
+
+        try:
+            return parse_certificates(response.json_data)
+        except Exception:
+            raise APIContractError("Unexpected Response for Certificate Model")
 
     def iter_all(self):
-
         first_page = self.list()
-
         yield from paginate(first_page, self._fetch_href)
 
     def list_all(self):
@@ -30,11 +37,21 @@ class CertificatesApi:
 
     def get_by_serial(self, serial: str):
         response = self.transport.get(certificate_by_serial(serial))
-        return parse_certificate_detail(response.json_data)
+
+        try:
+            return parse_certificate_detail(response.json_data)
+        except Exception:
+            raise APIContractError(
+                "Unexpected Response for Certificate Detail Model"
+            )
 
     def search(self, query):
         response = self.transport.get(CERTIFICATES, params={"search": query})
-        return parse_certificates(response.json_data)
+
+        try:
+            return parse_certificates(response.json_data)
+        except Exception:
+            raise APIContractError("Unexpected Response for Certificate Model")
 
 
 class UsersApi:
@@ -44,11 +61,19 @@ class UsersApi:
 
     def list(self):
         response = self.transport.get(USERS)
-        return parse_users(response.json_data)
+
+        try:
+            return parse_users(response.json_data)
+        except Exception:
+            raise APIContractError("Unexpected Response for User Model")
 
     def get(self, user_id):
         response = self.transport.get(f"{USERS}/{user_id}")
-        return parse_user(response.json_data)
+
+        try:
+            return parse_user(response.json_data)
+        except Exception:
+            raise APIContractError("Unexpected Response for User Model")
 
 
 class CertRequestsApi:
@@ -58,11 +83,23 @@ class CertRequestsApi:
 
     def list(self):
         response = self.transport.get(CERT_REQUESTS)
-        return parse_cert_requests(response.json_data)
+
+        try:
+            return parse_cert_requests(response.json_data)
+        except Exception:
+            raise APIContractError(
+                "Unexpected Response for Certificate Request Model"
+            )
 
     def get(self, cert_request_id):
         response = self.transport.get(f"{CERT_REQUESTS}/{cert_request_id}")
-        return parse_cert_request(response.json_data)
+
+        try:
+            return parse_cert_request(response.json_data)
+        except Exception:
+            raise APIContractError(
+                "Unexpected Response for Certificate Request Model"
+            )
 
 
 class GostRAClient:
