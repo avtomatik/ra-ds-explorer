@@ -1,3 +1,4 @@
+from gostra.api.schemas.cert_request_detail import CertRequestDetail
 from gostra.api.schemas.cert_request_list import CertRequest
 from gostra.api.schemas.certificate_detail import CertificateDetail
 from gostra.api.schemas.certificate_list import Certificate
@@ -24,6 +25,10 @@ def parse_cert_request(data: dict) -> CertRequest:
 
 def parse_certificate_detail(data: dict) -> CertificateDetail:
     return CertificateDetail.model_validate(data)
+
+
+def parse_cert_request_detail(data: dict) -> CertRequestDetail:
+    return CertRequestDetail.model_validate(data)
 
 
 def parse_certificate(data: dict) -> Certificate:

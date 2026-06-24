@@ -1,7 +1,5 @@
-import base64
 from functools import cached_property
 
-from cryptography import x509
 from pydantic import Field
 
 from gostra.api.schemas.cert_request_list import CertRequest
@@ -48,7 +46,5 @@ class CertRequestDetail(CertRequest):
     certificate_id: str = Field(validation_alias="certificateId")
 
     @cached_property
-    def x509(self) -> x509.Certificate:
-        return x509.load_der_x509_certificate(
-            base64.b64decode(self.raw_request)
-        )
+    def pkcs7_blob(self):
+        raise NotImplementedError("PKCS#7 parsing not implemented yet.")
