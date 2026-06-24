@@ -34,7 +34,7 @@ class FixtureTransport:
             status_code=200,
             headers={},
             body=json.dumps(payload),
-            json_data=payload,
+            json_data=payload if isinstance(payload, (dict, list)) else None,
         )
 
     def get(

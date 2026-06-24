@@ -4,7 +4,8 @@ from gostra.api.pagination import paginate
 from gostra.api.parsers import (parse_cert_request, parse_cert_requests,
                                 parse_certificate_detail, parse_certificates,
                                 parse_user, parse_users)
-from gostra.application.exceptions import APIContractError
+from gostra.infrastructure.transport.validators import (ensure_json,
+                                                        ensure_success)
 
 
 class CertificatesApi:
@@ -14,19 +15,13 @@ class CertificatesApi:
 
     def list(self):
         response = self.transport.get(CERTIFICATES)
-
-        try:
-            return parse_certificates(response.json_data)
-        except Exception:
-            raise APIContractError("Unexpected Response for Certificate Model")
+        data = ensure_json(ensure_success(response))
+        return parse_certificates(data)
 
     def _fetch_href(self, href: str):
         response = self.transport.get(href)
-
-        try:
-            return parse_certificates(response.json_data)
-        except Exception:
-            raise APIContractError("Unexpected Response for Certificate Model")
+        data = ensure_json(ensure_success(response))
+        return parse_certificates(data)
 
     def iter_all(self):
         first_page = self.list()
@@ -37,43 +32,13 @@ class CertificatesApi:
 
     def get_by_serial(self, serial: str):
         response = self.transport.get(certificate_by_serial(serial))
-
-        try:
-            return parse_certificate_detail(response.json_data)
-        except Exception:
-            raise APIContractError(
-                "Unexpected Response for Certificate Detail Model"
-            )
+        data = ensure_json(ensure_success(response))
+        return parse_certificate_detail(data)
 
     def search(self, query):
-        response = self.transport.get(CERTIFICATES, params={"search": query})
-
-        try:
-            return parse_certificates(response.json_data)
-        except Exception:
-            raise APIContractError("Unexpected Response for Certificate Model")
-
-
-class UsersApi:
-
-    def __init__(self, transport):
-        self.transport = transport
-
-    def list(self):
-        response = self.transport.get(USERS)
-
-        try:
-            return parse_users(response.json_data)
-        except Exception:
-            raise APIContractError("Unexpected Response for User Model")
-
-    def get(self, user_id):
-        response = self.transport.get(f"{USERS}/{user_id}")
-
-        try:
-            return parse_user(response.json_data)
-        except Exception:
-            raise APIContractError("Unexpected Response for User Model")
+        response = self.transport.get(CERTIFICATES, params={"value": query})
+        data = ensure_json(ensure_success(response))
+        return parse_certificates(data)
 
 
 class CertRequestsApi:
@@ -83,23 +48,29 @@ class CertRequestsApi:
 
     def list(self):
         response = self.transport.get(CERT_REQUESTS)
-
-        try:
-            return parse_cert_requests(response.json_data)
-        except Exception:
-            raise APIContractError(
-                "Unexpected Response for Certificate Request Model"
-            )
+        data = ensure_json(ensure_success(response))
+        return parse_cert_requests(data)
 
     def get(self, cert_request_id):
         response = self.transport.get(f"{CERT_REQUESTS}/{cert_request_id}")
+        data = ensure_json(ensure_success(response))
+        return parse_cert_request(data)
 
-        try:
-            return parse_cert_request(response.json_data)
-        except Exception:
-            raise APIContractError(
-                "Unexpected Response for Certificate Request Model"
-            )
+
+class UsersApi:
+
+    def __init__(self, transport):
+        self.transport = transport
+
+    def list(self):
+        response = self.transport.get(USERS)
+        data = ensure_json(ensure_success(response))
+        return parse_users(data)
+
+    def get(self, user_id):
+        response = self.transport.get(f"{USERS}/{user_id}")
+        data = ensure_json(ensure_success(response))
+        return parse_user(data)
 
 
 class GostRAClient:
