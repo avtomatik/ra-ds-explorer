@@ -1,10 +1,10 @@
 from pydantic import Field
 
 from .base import APIModel
-from .cert_request import CertRequest
-from .certificate import Certificate
+from .cert_request_list import CertRequest
+from .certificate_list import Certificate
 from .pages import Links
-from .user import User
+from .user_list import User
 
 
 class CertRequestsResponse(APIModel):

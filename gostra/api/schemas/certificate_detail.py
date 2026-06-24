@@ -4,11 +4,11 @@ from functools import cached_property
 from cryptography import x509
 from pydantic import Field
 
-from .certificate_base import CertificateBase
+from .certificate_list import Certificate
 from .extension import Extension
 
 
-class CertificateDetail(CertificateBase):
+class CertificateDetail(Certificate):
     cert_request_id: str = Field(validation_alias="certRequestId")
     subject: str
     issuer: str
