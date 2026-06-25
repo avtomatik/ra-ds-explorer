@@ -1,6 +1,6 @@
 from pydantic import Field
 
-from gostra.api.schemas.base import APIModel
+from .base import APIModel
 
 
 class CreatorMixin(APIModel):

@@ -1,10 +1,8 @@
-from gostra.api.schemas.cert_request_detail import CertRequestDetail
-from gostra.api.schemas.cert_request_list import CertRequest
-from gostra.api.schemas.certificate_detail import CertificateDetail
-from gostra.api.schemas.certificate_list import Certificate
+from gostra.api.schemas.cert_request import CertificateRequest
+from gostra.api.schemas.certificate import Certificate
 from gostra.api.schemas.responses import (CertificatesResponse,
                                           CertRequestsResponse, UsersResponse)
-from gostra.api.schemas.user_list import User
+from gostra.api.schemas.user import User
 
 
 def parse_cert_requests(data: dict) -> CertRequestsResponse:
@@ -19,16 +17,16 @@ def parse_users(data: dict) -> UsersResponse:
     return UsersResponse.model_validate(data)
 
 
-def parse_cert_request(data: dict) -> CertRequest:
-    return CertRequest.model_validate(data)
+def parse_cert_request(data: dict) -> CertificateRequest:
+    return CertificateRequest.model_validate(data)
 
 
-def parse_certificate_detail(data: dict) -> CertificateDetail:
-    return CertificateDetail.model_validate(data)
+def parse_certificate_detail(data: dict) -> Certificate:
+    return Certificate.model_validate(data)
 
 
-def parse_cert_request_detail(data: dict) -> CertRequestDetail:
-    return CertRequestDetail.model_validate(data)
+def parse_cert_request_detail(data: dict) -> CertificateRequest:
+    return CertificateRequest.model_validate(data)
 
 
 def parse_certificate(data: dict) -> Certificate:

@@ -1,8 +1,5 @@
-import base64
 import json
 from pathlib import Path
-
-from cryptography.hazmat.primitives.serialization import pkcs7
 
 from gostra.api.parsers import (parse_cert_request_detail, parse_cert_requests,
                                 parse_certificate_detail, parse_certificates,
