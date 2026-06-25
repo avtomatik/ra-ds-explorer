@@ -1,14 +1,5 @@
-from gostra.data.loader import FixtureLoader
-from gostra.data.reports import ReportService
-from gostra.data.repository import Repository
-
-
-def test_report_generation(fixtures_dir):
-    loader = FixtureLoader(fixtures_dir)
-    repo = Repository(loader.load())
-    service = ReportService(repo)
-
-    report = service.expiring_certificates_report(365)
+def test_report_generation(report_service):
+    report = report_service.expiring_certificates_report(365)
 
     assert report.name.startswith("expiring")
     assert report.data is not None

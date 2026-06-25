@@ -2,7 +2,7 @@ from pathlib import Path
 
 from openpyxl import Workbook
 
-from gostra.data.reports import Report
+from rads_explorer.data.reports import Report
 
 
 class XLSXExporter:

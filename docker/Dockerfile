@@ -16,10 +16,10 @@ COPY pyproject.toml uv.lock README.md ./
 ENV PATH="/root/.local/bin:$PATH"
 RUN uv sync --frozen --no-dev
 
-COPY gostra ./gostra
+COPY rads_explorer ./rads_explorer
 
 EXPOSE 8000
 
 HEALTHCHECK CMD curl --silent --fail http://localhost:8000/health || exit 1
 
-CMD ["/app/.venv/bin/uvicorn", "gostra.interfaces.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["/app/.venv/bin/uvicorn", "rads_explorer.interfaces.main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -2,11 +2,12 @@ from pathlib import Path
 
 import pytest
 
-from gostra.api.client import GostRAClient
-from gostra.config.paths import FIXTURES_DIR
-from gostra.infrastructure.fixtures.router import FixtureRouter
-from gostra.infrastructure.fixtures.store import FixtureStore
-from gostra.infrastructure.transport.fixture_transport import FixtureTransport
+from rads_explorer.api.client import RADataServiceClient
+from rads_explorer.config.paths import FIXTURES_DIR
+from rads_explorer.infrastructure.fixtures.router import FixtureRouter
+from rads_explorer.infrastructure.fixtures.store import FixtureStore
+from rads_explorer.infrastructure.transport.fixture_transport import \
+    FixtureTransport
 
 
 @pytest.fixture
@@ -20,8 +21,8 @@ def fixtures_dir() -> Path:
 
 
 @pytest.fixture
-def client(fixtures_dir) -> GostRAClient:
+def client(fixtures_dir) -> RADataServiceClient:
     store = FixtureStore(fixtures_dir)
     router = FixtureRouter(store)
     transport = FixtureTransport(router)
-    return GostRAClient(transport)
+    return RADataServiceClient(transport)

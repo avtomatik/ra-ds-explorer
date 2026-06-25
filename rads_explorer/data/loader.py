@@ -1,9 +1,9 @@
 import json
 from pathlib import Path
 
-from gostra.api.parsers import (parse_cert_requests, parse_certificates,
-                                parse_users)
-from gostra.data.models import Dataset
+from rads_explorer.api.parsers import (parse_cert_requests, parse_certificates,
+                                       parse_users)
+from rads_explorer.data.models import Dataset
 
 
 class FixtureLoader:

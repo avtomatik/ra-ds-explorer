@@ -1,4 +1,4 @@
-from gostra.infrastructure.fixtures.store import FixtureStore
+from rads_explorer.infrastructure.fixtures.store import FixtureStore
 
 
 class FixtureRouter:

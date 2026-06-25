@@ -3,9 +3,10 @@ import subprocess
 from typing import Any, Mapping
 from urllib.parse import urlencode
 
-from gostra.config.settings import Settings
-from gostra.infrastructure.transport.exceptions import CurlExecutionError
-from gostra.infrastructure.transport.response import HTTPResponse
+from rads_explorer.config.settings import Settings
+from rads_explorer.infrastructure.transport.exceptions import \
+    CurlExecutionError
+from rads_explorer.infrastructure.transport.response import HTTPResponse
 
 
 class CryptoProCurlTransport:

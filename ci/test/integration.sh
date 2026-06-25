@@ -7,5 +7,4 @@ cd "$ROOT_DIR"
 export PYTHONPATH="$ROOT_DIR"
 
 echo "[TEST] running integration tests"
-echo "[TEST] !!!skipping for now!!!"
-# pytest tests/infrastructure -v
+pytest tests -vvv

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime, timezone
 
-from gostra.data.repository import Repository
+from rads_explorer.data.repository import Repository
 
 
 @dataclass

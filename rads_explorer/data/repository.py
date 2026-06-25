@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from gostra.data.models import Dataset
+from rads_explorer.data.models import Dataset
 
 
 class Repository:

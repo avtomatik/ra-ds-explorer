@@ -7,7 +7,7 @@ export BUILDKIT_PROGRESS=plain
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 VERSION="$(./ci/release/version.sh)"
-IMAGE="gostra:${VERSION}"
+IMAGE="rads_explorer:${VERSION}"
 
 echo "[BUILD] version: $VERSION"
 

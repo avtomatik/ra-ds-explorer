@@ -15,8 +15,8 @@ class HTTPResponse:
 
     @property
     def content_type(self) -> str | None:
-        for k, v in self.headers.items():
-            if k.lower() == "content-type":
-                return v
+        for key, value in self.headers.items():
+            if key.lower() == "content-type":
+                return value
 
         return None

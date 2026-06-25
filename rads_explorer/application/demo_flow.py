@@ -82,7 +82,7 @@ class DemoFlow:
         # =====================================================================
         logger.info("[D] XLSX Export")
 
-        output = Path("/tmp/gostra-demo.xlsx")
+        output = Path("/tmp/ra-ds-explorer-demo.xlsx")
 
         self.exporter.export(expiring, output)
 

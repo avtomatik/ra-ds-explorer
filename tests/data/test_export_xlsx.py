@@ -1,15 +1,8 @@
-from gostra.data.export.xlsx import XLSXExporter
-from gostra.data.loader import FixtureLoader
-from gostra.data.reports import ReportService
-from gostra.data.repository import Repository
+from rads_explorer.data.export.xlsx import XLSXExporter
 
 
-def test_xlsx_export(fixtures_dir, tmp_path):
-    loader = FixtureLoader(fixtures_dir)
-    repo = Repository(loader.load())
-    service = ReportService(repo)
-
-    report = service.expiring_certificates_report(365)
+def test_xlsx_export(report_service, tmp_path):
+    report = report_service.expiring_certificates_report(365)
 
     exporter = XLSXExporter()
     out = tmp_path / "report.xlsx"

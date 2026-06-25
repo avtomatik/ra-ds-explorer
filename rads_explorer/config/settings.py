@@ -8,7 +8,7 @@ from .enums import TransportMode
 
 class Settings(BaseSettings):
 
-    model_config = SettingsConfigDict(env_prefix="GOSTRA_", env_file=".env")
+    model_config = SettingsConfigDict(env_prefix="RADS_", env_file=".env")
 
     # =========================================================================
     # General

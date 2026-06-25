@@ -1,11 +1,12 @@
 import json
 import logging
 
-from gostra.api.parsers import (parse_cert_request_detail, parse_cert_requests,
-                                parse_certificate_detail, parse_certificates,
-                                parse_users)
-from gostra.config.paths import FIXTURES_DIR
-from gostra.shared.logging import setup_logging
+from rads_explorer.api.parsers import (parse_cert_request_detail,
+                                       parse_cert_requests,
+                                       parse_certificate_detail,
+                                       parse_certificates, parse_users)
+from rads_explorer.config.paths import FIXTURES_DIR
+from rads_explorer.shared.logging import setup_logging
 
 logger = logging.getLogger(__name__)
 

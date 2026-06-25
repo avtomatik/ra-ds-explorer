@@ -1,13 +1,13 @@
 import logging
 
-from gostra.application.demo_flow import DemoFlow
-from gostra.config.paths import FIXTURES_DIR
-from gostra.container.container import get_container
-from gostra.data.export.xlsx import XLSXExporter
-from gostra.data.loader import FixtureLoader
-from gostra.data.reports import ReportService
-from gostra.data.repository import Repository
-from gostra.shared.logging import setup_logging
+from rads_explorer.application.demo_flow import DemoFlow
+from rads_explorer.config.paths import FIXTURES_DIR
+from rads_explorer.container.container import get_container
+from rads_explorer.data.export.xlsx import XLSXExporter
+from rads_explorer.data.loader import FixtureLoader
+from rads_explorer.data.reports import ReportService
+from rads_explorer.data.repository import Repository
+from rads_explorer.shared.logging import setup_logging
 
 logger = logging.getLogger(__name__)
 

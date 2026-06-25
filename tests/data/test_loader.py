@@ -1,4 +1,4 @@
-from gostra.data.loader import FixtureLoader
+from rads_explorer.data.loader import FixtureLoader
 
 
 def test_fixture_loader(fixtures_dir):

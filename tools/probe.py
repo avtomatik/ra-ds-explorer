@@ -2,10 +2,10 @@ import argparse
 import json
 import logging
 
-from gostra.config.settings import Settings
-from gostra.infrastructure.transport.cryptopro_curl import \
+from rads_explorer.config.settings import Settings
+from rads_explorer.infrastructure.transport.cryptopro_curl import \
     CryptoProCurlTransport
-from gostra.shared.logging import setup_logging
+from rads_explorer.shared.logging import setup_logging
 
 logger = logging.getLogger(__name__)
 

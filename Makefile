@@ -1,4 +1,4 @@
-# Makefile for GostRA CI/CD orchestration
+# Makefile for rads_explorer CI/CD orchestration
 # ---------------------------------------
 # Targets:
 #   make all           → full pipeline (validate, test, build, export)
@@ -13,7 +13,7 @@
 ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 VERSION := $(shell $(ROOT_DIR)/ci/release/version.sh)
-IMAGE := gostra:$(VERSION)
+IMAGE := rads_explorer:$(VERSION)
 ARTIFACT_DIR := $(ROOT_DIR)/artifacts
 SBOM_DIR := $(ARTIFACT_DIR)/sbom
 

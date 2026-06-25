@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from gostra.infrastructure.transport.response import HTTPResponse
+from rads_explorer.infrastructure.transport.response import HTTPResponse
 
 
 class BaseTransport(Protocol):

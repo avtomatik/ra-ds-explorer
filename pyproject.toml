@@ -1,15 +1,27 @@
 [project]
-name = "gost-ra-client"
+name = "ra-ds-explorer"
 version = "0.1.0"
-description = "Python/PySide client framework for enterprise RA and PKI REST APIs using mutual TLS authentication."
+description = "Offline-first Python client and service framework for GOST-enabled Registration Authority REST APIs."
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
+
 dependencies = [
     "cryptography>=48.0.0",
     "fastapi>=0.136.3",
     "openpyxl>=3.1.5",
     "pydantic-settings>=2.14.1",
-    "pytest>=9.0.3",
-    "ruff>=0.15.16",
     "uvicorn>=0.48.0",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
+
+gui = [
+    "pyside6>=6.8",
+]
+
+[project.scripts]
+ra-demo = "tools.run_demo:main"
+ra-probe = "tools.probe:main"

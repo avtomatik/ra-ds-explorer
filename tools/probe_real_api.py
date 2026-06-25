@@ -1,16 +1,14 @@
 import os
 
-from gostra.config.paths import FIXTURES_DIR
+from rads_explorer.application.demo_flow import DemoFlow
+from rads_explorer.config.paths import FIXTURES_DIR
+from rads_explorer.container.container import get_container
+from rads_explorer.data.export.xlsx import XLSXExporter
+from rads_explorer.data.loader import FixtureLoader
+from rads_explorer.data.reports import ReportService
+from rads_explorer.data.repository import Repository
 
-os.environ["GOSTRA_TRANSPORT"] = "curl"
-
-
-from gostra.application.demo_flow import DemoFlow
-from gostra.container.container import get_container
-from gostra.data.export.xlsx import XLSXExporter
-from gostra.data.loader import FixtureLoader
-from gostra.data.reports import ReportService
-from gostra.data.repository import Repository
+os.environ["RADS_TRANSPORT"] = "curl"
 
 
 def main():

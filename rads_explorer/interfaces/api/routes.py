@@ -2,12 +2,12 @@ from pathlib import Path
 
 from fastapi import APIRouter
 
-from gostra.config.paths import FIXTURES_DIR
-from gostra.container.container import get_container
-from gostra.data.export.xlsx import XLSXExporter
-from gostra.data.loader import FixtureLoader
-from gostra.data.reports import ReportService
-from gostra.data.repository import Repository
+from rads_explorer.config.paths import FIXTURES_DIR
+from rads_explorer.container.container import get_container
+from rads_explorer.data.export.xlsx import XLSXExporter
+from rads_explorer.data.loader import FixtureLoader
+from rads_explorer.data.reports import ReportService
+from rads_explorer.data.repository import Repository
 
 router = APIRouter()
 

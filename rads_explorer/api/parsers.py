@@ -1,9 +1,11 @@
-from gostra.api.schemas.cert_request import CertificateRequest
-from gostra.api.schemas.certificate import Certificate
-from gostra.api.schemas.responses import (CertificatesResponse,
-                                          CertRequestsResponse, UsersResponse)
-from gostra.api.schemas.user import User
-from gostra.application.exceptions import APIContractError, ValidationError
+from rads_explorer.api.schemas.cert_request import CertificateRequest
+from rads_explorer.api.schemas.certificate import Certificate
+from rads_explorer.api.schemas.responses import (CertificatesResponse,
+                                                 CertRequestsResponse,
+                                                 UsersResponse)
+from rads_explorer.api.schemas.user import User
+from rads_explorer.application.exceptions import (APIContractError,
+                                                  ValidationError)
 
 
 def _parse(model, data):

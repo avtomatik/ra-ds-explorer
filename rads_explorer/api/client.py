@@ -1,11 +1,12 @@
-from gostra.api.endpoints import (CERT_REQUESTS, CERTIFICATES, USERS,
-                                  certificate_by_serial)
-from gostra.api.pagination import paginate
-from gostra.api.parsers import (parse_cert_request, parse_cert_requests,
-                                parse_certificate_detail, parse_certificates,
-                                parse_user, parse_users)
-from gostra.infrastructure.transport.validators import (ensure_json,
-                                                        ensure_success)
+from rads_explorer.api.endpoints import (CERT_REQUESTS, CERTIFICATES, USERS,
+                                         certificate_by_serial)
+from rads_explorer.api.pagination import paginate
+from rads_explorer.api.parsers import (parse_cert_request, parse_cert_requests,
+                                       parse_certificate_detail,
+                                       parse_certificates, parse_user,
+                                       parse_users)
+from rads_explorer.infrastructure.transport.validators import (ensure_json,
+                                                               ensure_success)
 
 
 class CertificatesApi:
@@ -73,13 +74,10 @@ class UsersApi:
         return parse_user(data)
 
 
-class GostRAClient:
+class RADataServiceClient:
 
     def __init__(self, transport):
         self.transport = transport
-
         self.certificates = CertificatesApi(transport)
-
-        self.users = UsersApi(transport)
-
         self.cert_requests = CertRequestsApi(transport)
+        self.users = UsersApi(transport)

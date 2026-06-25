@@ -1,275 +1,389 @@
-# GOST RA Client
+# RA Data Service Explorer
 
-`gost-ra-client` is an offline-first Python client and GUI toolkit for interacting with GOST-enabled Registration Authority (RA) REST APIs in enterprise environments.
+`ra-ds-explorer` is an enterprise-oriented Python client and service framework for interacting with GOST-enabled Registration Authority (RA) REST APIs.
 
-The project is designed for infrastructures where:
+The project provides:
 
-- mutual TLS authentication is mandatory
-- CryptoPro CSP is used for certificate/key operations
-- client certificates are stored in CryptoPro containers
-- direct OpenSSL integration is undesirable or unsupported
-- operational hosts may have no internet access
-- Python applications must run in isolated enterprise Linux environments
+- authenticated RA API communication
+- CryptoPro-compatible mutual TLS transport
+- typed API models
+- certificate/user/request operations
+- offline fixture-based development mode
+- reporting and export capabilities
+- service-layer abstractions suitable for GUI integration
 
-The project intentionally separates:
+The project is designed for secured enterprise environments where:
 
-- transport execution
-- REST API bindings
-- business/service logic
-- GUI presentation
+- client authentication uses certificates
+- CryptoPro CSP tooling is already deployed
+- direct OpenSSL integration is undesirable
+- internet access may be restricted
+- runtime environments must be controlled and reproducible
 
-to support maintainable deployment in secured environments.
+---
 
-The reference runtime model is:
+# Current Project Status
 
-```text
-PySide6 GUI
-    ↓
-Python service layer
-    ↓
-CryptoPro curl wrapper
-    ↓
-GOST mutual TLS
-    ↓
+The current implementation provides:
+
+## API Client Layer
+
+Implemented:
+
+- certificate API access
+- user API access
+- certificate request API access
+- pagination handling
+- response validation
+- typed schema parsing
+
+Architecture:
+
+```
+
+Application Services
+↓
+API Client
+↓
+Transport Layer
+↓
 RA REST API
-```
 
-The project does **not** attempt to implement custom cryptography bindings or OpenSSL engine integrations.
-
-Instead, the recommended approach is:
-
-- use vendor-supported CryptoPro tooling
-- execute authenticated requests through CryptoPro curl
-- isolate runtime dependencies from system Python
-- deploy application runtimes in self-contained directories
-
----
-
-# Runtime Deployment Strategy
-
-## Overview
-
-Enterprise target environments may:
-
-- prohibit internet access
-- restrict package manager usage
-- contain outdated system Python versions
-- require strict runtime isolation
-- forbid modification of system packages
-
-For these reasons, the recommended deployment model is:
-
-- deploy an isolated Python runtime into `/opt/...`
-- avoid modifying system Python
-- install all dependencies offline
-- keep application/runtime self-contained
-
-Recommended target layout:
-
-```text
-/opt/gost-ra-client/
-├── python/
-├── venv/
-├── app/
-├── wheels/
-├── logs/
-├── exports/
-└── cache/
 ```
 
 ---
 
-# Recommended Python Runtime Strategy
+# Transport Architecture
 
-## Do NOT replace system Python
+The project intentionally separates API logic from transport execution.
 
-System Python should remain untouched.
+Supported transports:
 
-Avoid:
+## Fixture Transport
 
-```bash
-sudo apt remove python
-sudo update-alternatives
+Used for:
+
+- offline development
+- deterministic testing
+- CI pipelines
+- API contract validation
+
+Flow:
+
 ```
 
-The application should use its own dedicated runtime.
+Application
+↓
+API Client
+↓
+Fixture Transport
+↓
+Local JSON Fixtures
 
----
-
-# Recommended Runtime Location
-
-Example:
-
-```text
-/opt/gost-ra-client/python/
-```
-
-This runtime is fully independent from the OS Python installation.
-
----
-
-# Offline Python Deployment
-
-## Step 1 — Prepare Runtime on Internet-Connected Machine
-
-Build or download a compatible Python runtime.
-
-Recommended versions:
-
-- Python 3.11
-- Python 3.12
-
-Example build target:
-
-```text
-python-3.11.x-linux-x86_64/
-```
-
-Transfer archive to the target environment.
-
----
-
-## Step 2 — Extract Runtime on Target Machine
-
-Example:
-
-```bash
-sudo mkdir -p /opt/gost-ra-client
-sudo tar -xf python-runtime.tar.gz -C /opt/gost-ra-client/
-```
-
-Result:
-
-```text
-/opt/gost-ra-client/python/bin/python3
 ```
 
 ---
 
-# Virtual Environment
+## CryptoPro Curl Transport
 
-Create isolated virtual environment:
+Used for enterprise environments.
 
-```bash
-/opt/gost-ra-client/python/bin/python3 -m venv \
-    /opt/gost-ra-client/venv
+Flow:
+
 ```
 
-Activate:
+Application
+↓
+API Client
+↓
+CryptoPro Curl Wrapper
+↓
+CryptoPro CSP
+↓
+GOST Mutual TLS
+↓
+RA API
 
-```bash
-source /opt/gost-ra-client/venv/bin/activate
 ```
 
----
+The project does not implement custom cryptography.
 
-# Offline Dependency Installation
+It relies on:
 
-## Prepare Wheels on Connected Machine
-
-Example:
-
-```bash
-pip download -r requirements.txt -d wheels/
-```
-
-Transfer:
-
-```text
-wheels/
-```
-
-to target host.
-
----
-
-## Install Offline
-
-Example:
-
-```bash
-pip install \
-    --no-index \
-    --find-links=/opt/gost-ra-client/wheels \
-    -r requirements.txt
-```
-
----
-
-# CryptoPro Integration Strategy
-
-The project intentionally avoids direct OpenSSL/CSP integration inside Python.
-
-Recommended transport model:
-
-```text
-Python
-    ↓
-subprocess
-    ↓
-CryptoPro curl
-    ↓
-mTLS authentication
-```
-
-Example transport executable:
-
-```text
-/opt/cprocsp/bin/amd64/curl
-```
-
-Client certificate selection is expected to use CryptoPro-supported mechanisms such as certificate thumbprints.
-
----
-
-# Runtime Separation
-
-Recommended host roles:
-
-| Host | Responsibility |
-|---|---|
-| MONITOR | RDP / operator access only |
-| JUMP | application runtime + CryptoPro + GUI |
-| SERVER | nginx + RA API backend |
-
-The full application stack is expected to run on the JUMP host.
+- vendor-supported CryptoPro tooling
+- enterprise PKI configuration
+- certificate containers managed externally
 
 ---
 
 # Project Architecture
 
-```text
-gostra_gui
-    ↓
-gostra_services
-    ↓
-gostra_api
-    ↓
-gostra_transport
-    ↓
-CryptoPro curl
+Current structure:
+
 ```
 
-Layer responsibilities are intentionally isolated to simplify:
+rads_explorer/
 
-- offline deployment
-- debugging
-- testing
-- future GUI changes
-- transport replacement
-- mock/testing environments
+├── api/
+│   ├── client.py
+│   ├── endpoints.py
+│   ├── schemas/
+│   └── parsers.py
+│
+├── application/
+│   ├── certificate_service.py
+│   ├── user_service.py
+│   ├── cert_request_service.py
+│   └── reports
+│
+├── infrastructure/
+│   ├── transport/
+│   └── fixtures/
+│
+├── data/
+│   ├── repository.py
+│   ├── reports.py
+│   └── export/
+│
+├── interfaces/
+│   └── FastAPI interface layer
+│
+└── container/
+└── dependency composition
+
+```
 
 ---
 
-# Design Goals
+# Development Mode
 
-- offline-first operation
-- deterministic deployment
-- isolated runtime environment
-- enterprise maintainability
-- minimal system modification
-- compatibility with secured infrastructures
-- support for GOST-enabled mutual TLS environments
+The project supports fully offline execution.
+
+Fixtures provide:
+
+- certificates
+- users
+- certificate requests
+- certificate details
+
+Example workflow:
+
+```
+
+Fixture JSON
+↓
+Fixture Loader
+↓
+Repository
+↓
+Reports / Services / API
+
+```
+
+This allows development without:
+
+- RA server access
+- CryptoPro installation
+- network connectivity
+
+---
+
+# Testing
+
+The project contains:
+
+## Unit Tests
+
+Covers:
+
+- services
+- parsers
+- data layer
+- exports
+
+## API Contract Tests
+
+Covers:
+
+- fixture API behavior
+- schema validation
+- certificate parsing
+
+## Integration Tests
+
+Prepared for:
+
+- real RA API access
+- CryptoPro transport verification
+
+---
+
+# Reporting and Export
+
+Implemented:
+
+## Certificate Reports
+
+Examples:
+
+- expiring certificates
+- issuer distribution
+- certificate searches
+
+## Export
+
+Supported:
+
+- XLSX generation
+
+Example:
+
+```
+
+RA API
+↓
+Repository
+↓
+Report Service
+↓
+XLSX Export
+
+```
+
+---
+
+# Running Locally
+
+Install dependencies:
+
+```bash
+uv sync
+```
+
+Run tests:
+
+```bash
+pytest
+```
+
+Run demo:
+
+```bash
+python tools/run_demo.py
+```
+
+Run fixture API:
+
+```bash
+uvicorn rads_explorer.interfaces.main:app
+```
+
+---
+
+# Configuration
+
+Runtime configuration uses environment variables.
+
+Example:
+
+```env
+RADS_TRANSPORT=fixture
+
+RADS_API_BASE_URL=https://ra.example.local
+
+RADS_CURL_PATH=/opt/cprocsp/bin/amd64/curl
+
+RADS_CERT_THUMBPRINT=<certificate-thumbprint>
+```
+
+Transport selection:
+
+```env
+RADS_TRANSPORT=fixture
+```
+
+or:
+
+```env
+RADS_TRANSPORT=curl
+```
+
+---
+
+# Deployment Model
+
+Target environments are expected to use isolated runtimes.
+
+Recommended:
+
+```
+/opt/ra-ds-explorer/
+
+├── python/
+├── venv/
+├── app/
+├── wheels/
+├── logs/
+└── exports/
+```
+
+Goals:
+
+* no modification of system Python
+* reproducible installation
+* offline package installation
+* controlled enterprise deployment
+
+---
+
+# Security Model
+
+The project follows these principles:
+
+* no private key handling inside Python
+* no custom cryptographic implementation
+* no OpenSSL engine integration
+* no bypassing enterprise PKI controls
+
+Authentication remains the responsibility of:
+
+* CryptoPro CSP
+* enterprise certificate infrastructure
+* configured certificate stores
+
+---
+
+# Planned Transition
+
+The original long-term vision of the project includes evolving into a full operator-facing application.
+
+Planned transition:
+
+```
+PySide6 GUI
+      ↓
+Application Services
+      ↓
+RA Client Framework
+      ↓
+CryptoPro Transport
+      ↓
+RA API
+```
+
+Future capabilities may include:
+
+* desktop GUI
+* certificate lifecycle dashboards
+* operator workflows
+* interactive search
+* certificate inspection
+* report generation interface
+* enterprise workstation deployment
+
+The current architecture intentionally preserves this path.
+
+The GUI layer is not implemented yet because the service and transport foundations are being stabilized first.
 
 ---
 
@@ -277,8 +391,15 @@ Layer responsibilities are intentionally isolated to simplify:
 
 The project does not aim to:
 
-- replace CryptoPro CSP
-- implement custom GOST cryptography
-- bypass enterprise PKI policy
-- expose private infrastructure details
-- depend on internet-hosted runtime services
+* replace CryptoPro CSP
+* implement GOST cryptography itself
+* bypass enterprise PKI policies
+* replace RA server functionality
+* depend on cloud services
+* require internet connectivity during operation
+
+---
+
+# License
+
+See: [LICENSE](LICENSE.md)

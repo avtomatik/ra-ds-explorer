@@ -1,7 +1,7 @@
 import json
 
-from gostra.infrastructure.fixtures.router import FixtureRouter
-from gostra.infrastructure.transport.response import HTTPResponse
+from rads_explorer.infrastructure.fixtures.router import FixtureRouter
+from rads_explorer.infrastructure.transport.response import HTTPResponse
 
 
 class FixtureTransport:
