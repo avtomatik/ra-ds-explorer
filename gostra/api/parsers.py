@@ -3,35 +3,41 @@ from gostra.api.schemas.certificate import Certificate
 from gostra.api.schemas.responses import (CertificatesResponse,
                                           CertRequestsResponse, UsersResponse)
 from gostra.api.schemas.user import User
+from gostra.application.exceptions import APIContractError, ValidationError
 
 
-def parse_cert_requests(data: dict) -> CertRequestsResponse:
-    return CertRequestsResponse.model_validate(data)
+def _parse(model, data):
+    try:
+        return model.model_validate(data)
+    except ValidationError as exc:
+        raise APIContractError(
+            f"API schema mismatch for {model.__name__}"
+        ) from exc
 
 
-def parse_certificates(data: dict) -> CertificatesResponse:
-    return CertificatesResponse.model_validate(data)
+def parse_certificates(data):
+    return _parse(CertificatesResponse, data)
 
 
-def parse_users(data: dict) -> UsersResponse:
-    return UsersResponse.model_validate(data)
+def parse_certificate_detail(data):
+    return _parse(Certificate, data)
 
 
-def parse_cert_request(data: dict) -> CertificateRequest:
-    return CertificateRequest.model_validate(data)
+def parse_cert_request(data):
+    return _parse(CertificateRequest, data)
 
 
-def parse_certificate_detail(data: dict) -> Certificate:
-    return Certificate.model_validate(data)
+def parse_cert_requests(data):
+    return _parse(CertRequestsResponse, data)
 
 
-def parse_cert_request_detail(data: dict) -> CertificateRequest:
-    return CertificateRequest.model_validate(data)
+def parse_cert_request_detail(data):
+    return parse_cert_request(data)
 
 
-def parse_certificate(data: dict) -> Certificate:
-    return Certificate.model_validate(data)
+def parse_user(data):
+    return _parse(User, data)
 
 
-def parse_user(data: dict) -> User:
-    return User.model_validate(data)
+def parse_users(data):
+    return _parse(UsersResponse, data)

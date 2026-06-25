@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from gostra.infrastructure.transport.response import HttpResponse
+from gostra.infrastructure.transport.response import HTTPResponse
 
 
 class BaseTransport(Protocol):
@@ -12,11 +12,11 @@ class BaseTransport(Protocol):
         params=None,
         json_data=None,
         headers=None,
-    ) -> HttpResponse: ...
+    ) -> HTTPResponse: ...
 
     def get(
         self,
         path: str,
         params=None,
         headers=None,
-    ) -> HttpResponse: ...
+    ) -> HTTPResponse: ...

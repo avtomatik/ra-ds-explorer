@@ -1,13 +1,9 @@
-from enum import StrEnum
 from pathlib import Path
 
 from pydantic import HttpUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
-class TransportMode(StrEnum):
-    CURL = "curl"
-    FIXTURE = "fixture"
+from .enums import TransportMode
 
 
 class Settings(BaseSettings):

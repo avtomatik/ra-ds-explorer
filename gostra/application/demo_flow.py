@@ -18,7 +18,6 @@ class DemoFlow:
         self.reports = reports
 
     def run(self):
-
         print("=" * 70)
         print("GOST RA CLIENT DEMO")
         print("=" * 70)
@@ -26,10 +25,8 @@ class DemoFlow:
         # =====================================================================
         # A — Certificates
         # =====================================================================
-
         certificates = self.certificates.list_certificates()
 
-        print()
         print("[A] Certificates")
         print("Count:", len(certificates.items))
 
@@ -39,46 +36,34 @@ class DemoFlow:
                 f"""
                 CN:
                     {cert.name_attributes.common_name}
-
                 SNILS:
                     {cert.name_attributes.snils}
-
                 Serial:
                     {cert.serial_number}
-
                 Status:
                     {cert.status}
-
                 Valid:
                     {cert.not_before}
                     -
-                    {cert.not_after}
-
-                """
+                    {cert.not_after}"""
             )
             print("=" * 54)
 
         # =====================================================================
         # B — Detail
         # =====================================================================
-
         first = certificates.items[0]
 
         detail = self.certificates.get_certificate(first.serial_number)
 
         print("[B] Certificate detail")
-
         print("Subject:", detail.subject)
-
         print("Issuer:", detail.issuer)
-
         print("X509:", detail.x509.subject)
 
         # =====================================================================
         # C — Reports
         # =====================================================================
-
-        print()
         print("[C] Reports")
 
         expiring = self.reports.expiring_certificates_report(365)
@@ -93,8 +78,6 @@ class DemoFlow:
         # =====================================================================
         # D — Export
         # =====================================================================
-
-        print()
         print("[D] XLSX Export")
 
         output = Path("/tmp/gostra-demo.xlsx")
@@ -102,6 +85,4 @@ class DemoFlow:
         self.exporter.export(expiring, output)
 
         print("Created:", output)
-
-        print()
         print("DEMO COMPLETE")

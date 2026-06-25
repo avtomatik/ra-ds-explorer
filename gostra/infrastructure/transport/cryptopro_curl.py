@@ -1,11 +1,11 @@
 import json
 import subprocess
-from typing import Any, Mapping, Optional
+from typing import Any, Mapping
 from urllib.parse import urlencode
 
 from gostra.config.settings import Settings
 from gostra.infrastructure.transport.exceptions import CurlExecutionError
-from gostra.infrastructure.transport.response import HttpResponse
+from gostra.infrastructure.transport.response import HTTPResponse
 
 
 class CryptoProCurlTransport:
@@ -17,25 +17,28 @@ class CryptoProCurlTransport:
         self,
         method: str,
         path: str,
-        params: Optional[Mapping[str, Any]] = None,
-        json_data: Optional[Mapping[str, Any]] = None,
-        headers: Optional[Mapping[str, Any]] = None,
-    ) -> HttpResponse:
+        params: Mapping[str, Any] | None = None,
+        json_data: Mapping[str, Any] | None = None,
+        headers: Mapping[str, Any] | None = None,
+    ) -> HTTPResponse:
+
         url = self.build_url(path, params)
 
         cmd = [
-            self.settings.curl_path,
+            str(self.settings.curl_path),
             "-s",
-            "-k",
-            "--cert",
-            self.settings.cert_thumbprint,
             "-i",
             "-w",
             "\nHTTP_STATUS:%{http_code}",
             "-X",
             method.upper(),
+            "--cert",
+            self.settings.cert_thumbprint,
             url,
         ]
+
+        if not self.settings.verify_tls:
+            cmd.append("-k")
 
         if headers:
             for key, value in headers.items():
@@ -52,18 +55,19 @@ class CryptoProCurlTransport:
             )
 
         if self.settings.debug_http:
-            print("CMD:", cmd)
+            print("\nCURL COMMAND:")
+            print(" ".join(cmd))
 
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            timeout=self.settings.timeout,
-            check=False,
-        )
-
-        if self.settings.debug_http and result.stderr:
-            print("STDERR:", result.stderr)
+        try:
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=self.settings.timeout,
+                check=False,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise CurlExecutionError("curl request timeout") from exc
 
         if result.returncode != 0:
             raise CurlExecutionError(
@@ -72,47 +76,61 @@ class CryptoProCurlTransport:
                 f"STDERR:\n{result.stderr}"
             )
 
-        try:
-            raw, status_part = result.stdout.rsplit("HTTP_STATUS:", 1)
-        except ValueError:
-            raise CurlExecutionError(
-                "Unable to parse HTTP status from curl output.\n"
-                f"STDOUT:\n{result.stdout}\n"
-                f"STDERR:\n{result.stderr}"
-            )
-        status_code = int(status_part.strip())
+        raw = result.stdout
 
         try:
-            headers, body = raw.split("\r\n\r\n", 1)
-        except ValueError:
-            headers = ""
-            body = raw
+            response_raw, status_raw = raw.rsplit("HTTP_STATUS:", 1)
+        except ValueError as exc:
+            raise CurlExecutionError("Cannot parse curl response") from exc
 
-        try:
-            parsed_json = json.loads(body) if body else None
-        except json.JSONDecodeError:
-            parsed_json = None
+        status_code = int(status_raw.strip())
 
-        return HttpResponse(
+        headers_block, body = self._split_response(response_raw)
+
+        parsed_json = None
+
+        if body:
+            try:
+                parsed_json = json.loads(body)
+            except json.JSONDecodeError:
+                pass
+
+        return HTTPResponse(
             status_code=status_code,
-            headers={},
+            headers=self._parse_headers(headers_block),
             body=body,
             json_data=parsed_json,
         )
 
-    def get(self, path, params=None, headers=None) -> HttpResponse:
+    def get(self, path, params=None, headers=None) -> HTTPResponse:
         return self.request(
             method="GET", path=path, params=params, headers=headers
         )
 
     def build_url(self, path: str, params=None) -> str:
-
-        base = self.settings.api_base_url.rstrip("/")
+        base = str(self.settings.api_base_url).rstrip("/")
         path = path.lstrip("/")
-
         url = f"{base}/{path}"
 
         if params:
             url += "?" + urlencode(params, doseq=True)
-
         return url
+
+    def _split_response(self, raw: str):
+        parts = raw.split("\r\n\r\n", 1)
+
+        if len(parts) != 2:
+            return "", raw
+        return parts
+
+    def _parse_headers(self, block: str):
+        result = {}
+
+        for line in block.splitlines():
+            if ":" not in line:
+                continue
+
+            key, value = line.split(":", 1)
+            result[key.strip()] = value.strip()
+
+        return result

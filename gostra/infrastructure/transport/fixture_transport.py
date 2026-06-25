@@ -1,7 +1,7 @@
 import json
 
 from gostra.infrastructure.fixtures.router import FixtureRouter
-from gostra.infrastructure.transport.response import HttpResponse
+from gostra.infrastructure.transport.response import HTTPResponse
 
 
 class FixtureTransport:
@@ -17,20 +17,17 @@ class FixtureTransport:
         json_data=None,
         headers=None,
     ):
-
         try:
             payload = self.router.resolve(method, path)
-
         except FileNotFoundError:
-
-            return HttpResponse(
+            return HTTPResponse(
                 status_code=404,
                 headers={},
                 body="Not found",
                 json_data=None,
             )
 
-        return HttpResponse(
+        return HTTPResponse(
             status_code=200,
             headers={},
             body=json.dumps(payload),
@@ -43,9 +40,4 @@ class FixtureTransport:
         params=None,
         headers=None,
     ):
-        return self.request(
-            "GET",
-            path,
-            params=params,
-            headers=headers,
-        )
+        return self.request("GET", path, params=params, headers=headers)

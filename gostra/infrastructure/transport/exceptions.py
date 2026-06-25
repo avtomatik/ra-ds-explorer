@@ -4,11 +4,16 @@ class TransportError(Exception): ...
 class CurlExecutionError(TransportError): ...
 
 
-class HttpError(TransportError):
-    def __init__(self, status_code, body):
+class TimeoutError(TransportError): ...
+
+
+class HTTPError(TransportError):
+
+    def __init__(self, status_code: int, body: str):
         self.status_code = status_code
         self.body = body
-        super().__init__(f"HTTP {status_code}")
+
+        super().__init__(f"HTTP request failed: {status_code}")
 
 
-class JsonParseError(TransportError): ...
+class JSONDecodeError(TransportError): ...
