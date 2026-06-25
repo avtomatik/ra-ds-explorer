@@ -55,8 +55,11 @@ class CryptoProCurlTransport:
             )
 
         if self.settings.debug_http:
+            masked = cmd.copy()
+            idx = masked.index("--cert")
+            masked[idx + 1] = "***"
             print("\nCURL COMMAND:")
-            print(" ".join(cmd))
+            print(" ".join(masked))
 
         try:
             result = subprocess.run(

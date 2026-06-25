@@ -1,13 +1,11 @@
-from pathlib import Path
-
 from gostra.data.export.xlsx import XLSXExporter
 from gostra.data.loader import FixtureLoader
 from gostra.data.reports import ReportService
 from gostra.data.repository import Repository
 
 
-def test_xlsx_export(tmp_path):
-    loader = FixtureLoader(Path("gostra/fixtures"))
+def test_xlsx_export(fixtures_dir, tmp_path):
+    loader = FixtureLoader(fixtures_dir)
     repo = Repository(loader.load())
     service = ReportService(repo)
 

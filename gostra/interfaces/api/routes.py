@@ -2,6 +2,7 @@ from pathlib import Path
 
 from fastapi import APIRouter
 
+from gostra.config.paths import FIXTURES_DIR
 from gostra.container.container import get_container
 from gostra.data.export.xlsx import XLSXExporter
 from gostra.data.loader import FixtureLoader
@@ -10,7 +11,7 @@ from gostra.data.repository import Repository
 
 router = APIRouter()
 
-loader = FixtureLoader(Path("gostra/fixtures"))
+loader = FixtureLoader(FIXTURES_DIR)
 dataset = loader.load()
 repo = Repository(dataset)
 reports = ReportService(repo)

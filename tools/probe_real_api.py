@@ -1,8 +1,9 @@
 import os
 
+from gostra.config.paths import FIXTURES_DIR
+
 os.environ["GOSTRA_TRANSPORT"] = "curl"
 
-from pathlib import Path
 
 from gostra.application.demo_flow import DemoFlow
 from gostra.container.container import get_container
@@ -15,7 +16,7 @@ from gostra.data.repository import Repository
 def main():
     container = get_container()
 
-    loader = FixtureLoader(Path("gostra/fixtures"))
+    loader = FixtureLoader(FIXTURES_DIR)
 
     repo = Repository(loader.load())
 

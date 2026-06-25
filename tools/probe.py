@@ -1,12 +1,18 @@
 import argparse
 import json
+import logging
 
 from gostra.config.settings import Settings
 from gostra.infrastructure.transport.cryptopro_curl import \
     CryptoProCurlTransport
+from gostra.shared.logging import setup_logging
+
+logger = logging.getLogger(__name__)
 
 
-def main():
+def main() -> None:
+    setup_logging()
+
     parser = argparse.ArgumentParser()
 
     parser.add_argument("path")
@@ -26,12 +32,14 @@ def main():
 
     response = transport.get(args.path, params=params)
 
-    print(f"HTTP {response.status_code}")
+    logging.info("HTTP %d", response.status_code)
 
     if response.json_data is not None:
-        print(json.dumps(response.json_data, indent=2, ensure_ascii=False))
+        logging.info(
+            json.dumps(response.json_data, indent=2, ensure_ascii=False)
+        )
     else:
-        print(response.body)
+        logging.info(response.body)
 
 
 if __name__ == "__main__":

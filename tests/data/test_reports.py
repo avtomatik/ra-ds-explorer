@@ -1,12 +1,10 @@
-from pathlib import Path
-
 from gostra.data.loader import FixtureLoader
 from gostra.data.reports import ReportService
 from gostra.data.repository import Repository
 
 
-def test_report_generation():
-    loader = FixtureLoader(Path("gostra/fixtures"))
+def test_report_generation(fixtures_dir):
+    loader = FixtureLoader(fixtures_dir)
     repo = Repository(loader.load())
     service = ReportService(repo)
 

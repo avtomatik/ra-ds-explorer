@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 
 from gostra.api.client import GostRAClient
+from gostra.config.paths import FIXTURES_DIR
 from gostra.infrastructure.fixtures.router import FixtureRouter
 from gostra.infrastructure.fixtures.store import FixtureStore
 from gostra.infrastructure.transport.fixture_transport import FixtureTransport
@@ -14,12 +15,13 @@ def serial() -> str:
 
 
 @pytest.fixture
-def client() -> GostRAClient:
+def fixtures_dir() -> Path:
+    return FIXTURES_DIR
 
-    store = FixtureStore(Path("gostra/fixtures"))
 
+@pytest.fixture
+def client(fixtures_dir) -> GostRAClient:
+    store = FixtureStore(fixtures_dir)
     router = FixtureRouter(store)
-
     transport = FixtureTransport(router)
-
     return GostRAClient(transport)

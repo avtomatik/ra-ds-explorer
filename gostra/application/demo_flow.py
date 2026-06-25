@@ -1,4 +1,7 @@
+import logging
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 
 class DemoFlow:
@@ -18,36 +21,35 @@ class DemoFlow:
         self.reports = reports
 
     def run(self):
-        print("=" * 70)
-        print("GOST RA CLIENT DEMO")
-        print("=" * 70)
+        logger.info("=" * 70)
+        logger.info("GOST RA CLIENT DEMO")
+        logger.info("=" * 70)
 
         # =====================================================================
         # A — Certificates
         # =====================================================================
         certificates = self.certificates.list_certificates()
 
-        print("[A] Certificates")
-        print("Count:", len(certificates.items))
+        logger.info("[A] Certificates")
+        logger.info("Count: %d", len(certificates.items))
 
         for cert in certificates.items[:5]:
-            print("=" * 54)
-            print(
-                f"""
-                CN:
-                    {cert.name_attributes.common_name}
-                SNILS:
-                    {cert.name_attributes.snils}
-                Serial:
-                    {cert.serial_number}
-                Status:
-                    {cert.status}
-                Valid:
-                    {cert.not_before}
-                    -
-                    {cert.not_after}"""
+            logger.info("=" * 54)
+            logger.info(
+                """
+                CN: %s
+                SNILS: %s
+                Serial: %s
+                Status: %s
+                Valid: %s - %s""",
+                cert.name_attributes.common_name,
+                cert.name_attributes.snils,
+                cert.serial_number,
+                cert.status,
+                cert.not_before,
+                cert.not_after,
             )
-            print("=" * 54)
+            logger.info("=" * 54)
 
         # =====================================================================
         # B — Detail
@@ -56,33 +58,33 @@ class DemoFlow:
 
         detail = self.certificates.get_certificate(first.serial_number)
 
-        print("[B] Certificate detail")
-        print("Subject:", detail.subject)
-        print("Issuer:", detail.issuer)
-        print("X509:", detail.x509.subject)
+        logger.info("[B] Certificate detail")
+        logger.info("Subject: %s", detail.subject)
+        logger.info("Issuer: %s", detail.issuer)
+        logger.info("X509: %s", detail.x509.subject)
 
         # =====================================================================
         # C — Reports
         # =====================================================================
-        print("[C] Reports")
+        logger.info("[C] Reports")
 
         expiring = self.reports.expiring_certificates_report(365)
 
         if len(expiring.data) > 0:
-            print("Expiring:", len(expiring.data))
+            logger.info("Expiring: %d", len(expiring.data))
 
             issuer = self.reports.issuer_report()
 
-            print("Issuers:", issuer.data)
+            logger.info("Issuers: %s", issuer.data)
 
         # =====================================================================
         # D — Export
         # =====================================================================
-        print("[D] XLSX Export")
+        logger.info("[D] XLSX Export")
 
         output = Path("/tmp/gostra-demo.xlsx")
 
         self.exporter.export(expiring, output)
 
-        print("Created:", output)
-        print("DEMO COMPLETE")
+        logger.info("Created: %s", output)
+        logger.info("DEMO COMPLETE")

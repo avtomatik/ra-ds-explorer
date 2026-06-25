@@ -1,17 +1,23 @@
-from pathlib import Path
+import logging
 
 from gostra.application.demo_flow import DemoFlow
+from gostra.config.paths import FIXTURES_DIR
 from gostra.container.container import get_container
 from gostra.data.export.xlsx import XLSXExporter
 from gostra.data.loader import FixtureLoader
 from gostra.data.reports import ReportService
 from gostra.data.repository import Repository
+from gostra.shared.logging import setup_logging
+
+logger = logging.getLogger(__name__)
 
 
-def main():
+def main() -> None:
+    setup_logging()
+
     container = get_container()
 
-    loader = FixtureLoader(Path("gostra/fixtures"))
+    loader = FixtureLoader(FIXTURES_DIR)
 
     repo = Repository(loader.load())
 
