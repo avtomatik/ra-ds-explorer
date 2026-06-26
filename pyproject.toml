@@ -24,9 +24,10 @@ gui = [
 
 [tool.pytest.ini_options]
 markers = [
-    "manual: Needs to use RADS_TRANSPORT=curl",
+    "real: requires CryptoPro curl transport or external system",
+    "integration: end-to-end flows",
 ]
 
+
 [project.scripts]
-ra-demo = "tools.run_demo:main"
 ra-probe = "tools.probe:main"

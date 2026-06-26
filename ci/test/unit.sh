@@ -7,4 +7,5 @@ cd "$ROOT_DIR"
 export PYTHONPATH="$ROOT_DIR"
 
 echo "[TEST] running unit tests"
-pytest tests/domain tests/application -v
+
+pytest tests/application tests/data -v

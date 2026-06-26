@@ -13,7 +13,6 @@ RUN pip install --no-cache-dir uv
 
 COPY pyproject.toml uv.lock README.md ./
 
-ENV PATH="/root/.local/bin:$PATH"
 RUN uv sync --frozen --no-dev
 
 COPY rads_explorer ./rads_explorer
