@@ -1,0 +1,42 @@
+stages:
+  - validate
+  - test
+  - build
+  - integration
+  - release
+
+validate:
+  stage: validate
+  script:
+    - ci/validate/repo_sanity.sh
+    - ci/validate/lock_check.sh
+
+unit_tests:
+  stage: test
+  script:
+    - ci/test/lint.sh
+    - ci/test/unit.sh
+
+build:
+  stage: build
+  script:
+    - ci/build/docker_build.sh
+  artifacts:
+    paths:
+      - dist/
+
+integration_tests:
+  stage: integration
+  tags:
+    - crypto-enabled
+  script:
+    - ci/test/integration.sh
+  only:
+    - main
+
+release:
+  stage: release
+  script:
+    - ci/release/tag_release.sh
+  only:
+    - tags
