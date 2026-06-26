@@ -22,6 +22,11 @@ gui = [
     "pyside6>=6.8",
 ]
 
+[tool.pytest.ini_options]
+markers = [
+    "manual: Needs to use RADS_TRANSPORT=curl",
+]
+
 [project.scripts]
 ra-demo = "tools.run_demo:main"
 ra-probe = "tools.probe:main"
