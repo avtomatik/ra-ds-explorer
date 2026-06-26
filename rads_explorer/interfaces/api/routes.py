@@ -1,8 +1,6 @@
-from pathlib import Path
-
 from fastapi import APIRouter
 
-from rads_explorer.config.paths import FIXTURES_DIR
+from rads_explorer.config.paths import EXPORTS_DIR, FIXTURES_DIR
 from rads_explorer.container.container import get_container
 from rads_explorer.data.export.xlsx import XLSXExporter
 from rads_explorer.data.loader import FixtureLoader
@@ -14,7 +12,7 @@ router = APIRouter()
 loader = FixtureLoader(FIXTURES_DIR)
 dataset = loader.load()
 repo = Repository(dataset)
-reports = ReportService(repo)
+report_service = ReportService(repo)
 exporter = XLSXExporter()
 
 
@@ -58,17 +56,17 @@ def search_certificates(q: str):
 
 @router.get("/reports/expiring")
 def expiring(days: int = 30):
-    return reports.expiring_certificates_report(days).data
+    return report_service.expiring_certificates_report(days).data
 
 
 @router.get("/reports/issuer")
 def issuer_report():
-    return reports.issuer_report().data
+    return report_service.issuer_report().data
 
 
 @router.get("/export/expiring.xlsx")
 def export_expiring(days: int = 30):
-    report = reports.expiring_certificates_report(days)
-    path = Path("/tmp/expiring.xlsx")
+    report = report_service.expiring_certificates_report(days)
+    path = EXPORTS_DIR / "expiring.xlsx"
     exporter.export(report, path)
     return {"file": str(path)}

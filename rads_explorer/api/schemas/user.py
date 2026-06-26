@@ -12,9 +12,6 @@ class User(APIModel):
 
     created_when: datetime = Field(validation_alias="createdWhen")
 
-    # =========================================================================
-    # Detailed Fields
-    # =========================================================================
     creator_id: str | None = Field(None, validation_alias="creatorId")
     creator_name: str | None = Field(None, validation_alias="creatorName")
     creator_login: str | None = Field(None, validation_alias="creatorLogin")

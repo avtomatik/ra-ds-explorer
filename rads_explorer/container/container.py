@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from rads_explorer.api.client import RADataServiceClient
+from rads_explorer.api.client import RADSClient
 from rads_explorer.application.cert_request_service import CertRequestService
 from rads_explorer.application.certificate_service import CertificateService
 from rads_explorer.application.search_service import SearchService
@@ -20,7 +20,7 @@ class Container:
     def __init__(self):
         self._settings = Settings()
         self._transport = self._build_transport()
-        self._client = RADataServiceClient(self._transport)
+        self._client = RADSClient(self._transport)
 
     def _build_transport(self):
         match self._settings.transport:

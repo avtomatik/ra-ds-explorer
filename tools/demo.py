@@ -1,5 +1,6 @@
 import logging
-from pathlib import Path
+
+from rads_explorer.config.paths import EXPORTS_DIR
 
 logger = logging.getLogger(__name__)
 
@@ -9,14 +10,14 @@ class DemoFlow:
     def __init__(
         self,
         certificate_service,
-        user_service,
         cert_request_service,
+        user_service,
         exporter,
         reports,
     ):
         self.certificates = certificate_service
-        self.users = user_service
         self.requests = cert_request_service
+        self.users = user_service
         self.exporter = exporter
         self.reports = reports
 
@@ -82,9 +83,10 @@ class DemoFlow:
         # =====================================================================
         logger.info("[D] XLSX Export")
 
-        output = Path("/tmp/ra-ds-explorer-demo.xlsx")
+        path = EXPORTS_DIR / "ra-ds-explorer-demo.xlsx"
 
-        self.exporter.export(expiring, output)
+        EXPORTS_DIR.mkdir(parents=True, exist_ok=True)
+        self.exporter.export(expiring, path)
 
-        logger.info("Created: %s", output)
+        logger.info("Created: %s", path)
         logger.info("DEMO COMPLETE")

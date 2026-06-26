@@ -74,7 +74,7 @@ class UsersApi:
         return parse_user(data)
 
 
-class RADataServiceClient:
+class RADSClient:
 
     def __init__(self, transport):
         self.transport = transport

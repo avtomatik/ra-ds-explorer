@@ -22,9 +22,6 @@ class CertificateRequest(APIModel):
 
     status: str
 
-    # =========================================================================
-    # Detailed Fields
-    # =========================================================================
     user_id: str | None = Field(None, validation_alias="userId")
     subject: str | None = None
 

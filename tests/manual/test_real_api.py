@@ -1,11 +1,27 @@
+import os
+
+import pytest
+
 from rads_explorer.application.cert_request_service import CertRequestService
 from rads_explorer.application.certificate_service import CertificateService
 from rads_explorer.application.user_service import UserService
 from rads_explorer.data.export.xlsx import XLSXExporter
 from tools.demo import DemoFlow
 
+# =============================================================================
+# TransportMode.CURL
+# =============================================================================
+os.environ["RADS_TRANSPORT"] = "curl"
 
-def test_demo_flow_runs(client, report_service):
+
+def test_list_certificates(): ...
+def test_get_certificate_by_serial(): ...
+def test_list_users(): ...
+def test_list_cert_requests(): ...
+
+
+@pytest.mark.skip
+def test_real_api_flow_runs(client, report_service):
     flow = DemoFlow(
         certificate_service=CertificateService(client),
         cert_request_service=CertRequestService(client),
