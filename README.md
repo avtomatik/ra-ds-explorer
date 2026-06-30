@@ -287,7 +287,7 @@ Runtime configuration uses environment variables.
 Example:
 
 ```env
-RADS_TRANSPORT=fixture
+RADS_TRANSPORT=curl
 
 RADS_API_BASE_URL=https://ra.example.local
 
@@ -299,7 +299,7 @@ RADS_CERT_THUMBPRINT=<certificate-thumbprint>
 Transport selection:
 
 ```env
-RADS_TRANSPORT=fixture
+RADS_TRANSPORT=curl
 ```
 
 or:

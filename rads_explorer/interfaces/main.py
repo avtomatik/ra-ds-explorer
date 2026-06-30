@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from rads_explorer.infrastructure.fixtures import router
+from rads_explorer.interfaces.api.routes import router
 
 app = FastAPI(title="Registration Authority Data Services Enterprise API")
 

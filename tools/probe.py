@@ -32,14 +32,14 @@ def main() -> None:
 
     response = transport.get(args.path, params=params)
 
-    logging.info("HTTP %d", response.status_code)
+    logger.info("HTTP %d", response.status_code)
 
     if response.json_data is not None:
-        logging.info(
+        logger.info(
             json.dumps(response.json_data, indent=2, ensure_ascii=False)
         )
     else:
-        logging.info(response.body)
+        logger.info(response.body)
 
 
 if __name__ == "__main__":

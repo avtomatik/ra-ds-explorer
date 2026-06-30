@@ -1,4 +1,6 @@
+import logging
 from functools import lru_cache
+from pathlib import Path
 
 from rads_explorer.api.client import RADSClient
 from rads_explorer.application.cert_request_service import CertRequestService
@@ -8,6 +10,8 @@ from rads_explorer.application.user_service import UserService
 from rads_explorer.config.enums import TransportMode
 from rads_explorer.config.paths import FIXTURES_DIR
 from rads_explorer.config.settings import Settings
+from rads_explorer.data.export.xlsx import XLSXExporter
+from rads_explorer.data.reports import ReportService
 from rads_explorer.infrastructure.fixtures.router import FixtureRouter
 from rads_explorer.infrastructure.fixtures.store import FixtureStore
 from rads_explorer.infrastructure.transport.cryptopro_curl import \
@@ -15,12 +19,19 @@ from rads_explorer.infrastructure.transport.cryptopro_curl import \
 from rads_explorer.infrastructure.transport.fixture_transport import \
     FixtureTransport
 
+logger = logging.getLogger(__name__)
+
 
 class Container:
     def __init__(self):
         self._settings = Settings()
+        self._validate_settings(self._settings)
+
         self._transport = self._build_transport()
         self._client = RADSClient(self._transport)
+
+        logger.info("Transport mode: %s", self._settings.transport)
+        logger.info("API base URL: %s", self._settings.api_base_url)
 
     def _build_transport(self):
         match self._settings.transport:
@@ -37,6 +48,14 @@ class Container:
                     f"Unsupported transport: " f"{self._settings.transport}"
                 )
 
+    @staticmethod
+    def _validate_settings(settings: Settings):
+        if settings.transport == TransportMode.CURL:
+            if not settings.api_base_url:
+                raise RuntimeError("API base URL required.")
+            if not settings.cert_thumbprint:
+                raise RuntimeError("cert thumbprint required.")
+
     def certificate_service(self):
         return CertificateService(self._client)
 
@@ -48,6 +67,12 @@ class Container:
 
     def search_service(self):
         return SearchService(self._client)
+
+    def report_service(self):
+        return ReportService(self.certificate_service())
+
+    def exporter(self):
+        return XLSXExporter()
 
 
 @lru_cache

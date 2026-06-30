@@ -3,10 +3,9 @@ from pathlib import Path
 import pytest
 
 from rads_explorer.api.client import RADSClient
+from rads_explorer.application.certificate_service import CertificateService
 from rads_explorer.config.paths import FIXTURES_DIR
-from rads_explorer.data.loader import FixtureLoader
 from rads_explorer.data.reports import ReportService
-from rads_explorer.data.repository import Repository
 from rads_explorer.infrastructure.fixtures.router import FixtureRouter
 from rads_explorer.infrastructure.fixtures.store import FixtureStore
 from rads_explorer.infrastructure.transport.fixture_transport import \
@@ -32,7 +31,5 @@ def client(fixtures_dir) -> RADSClient:
 
 
 @pytest.fixture
-def report_service(fixtures_dir) -> ReportService:
-    loader = FixtureLoader(fixtures_dir)
-    repo = Repository(loader.load())
-    return ReportService(repo)
+def report_service(client) -> ReportService:
+    return ReportService(CertificateService(client))

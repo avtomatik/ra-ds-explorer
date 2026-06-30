@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     curl_path: Path
     cert_thumbprint: str
 
-    transport: TransportMode = TransportMode.FIXTURE
+    transport: TransportMode
 
     timeout: int = 30
     verify_tls: bool = False

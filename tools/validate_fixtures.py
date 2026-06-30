@@ -44,7 +44,7 @@ def main() -> None:
         )
     )
 
-    logging.info("OK")
+    logger.info("OK")
 
 
 if __name__ == "__main__":
