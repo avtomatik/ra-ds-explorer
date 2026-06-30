@@ -1,6 +1,5 @@
 import logging
 from functools import lru_cache
-from pathlib import Path
 
 from rads_explorer.api.client import RADSClient
 from rads_explorer.application.cert_request_service import CertRequestService
@@ -25,7 +24,7 @@ logger = logging.getLogger(__name__)
 class Container:
     def __init__(self):
         self._settings = Settings()
-        self._validate_settings(self._settings)
+        self._validate_settings()
 
         self._transport = self._build_transport()
         self._client = RADSClient(self._transport)
@@ -48,12 +47,11 @@ class Container:
                     f"Unsupported transport: " f"{self._settings.transport}"
                 )
 
-    @staticmethod
-    def _validate_settings(settings: Settings):
-        if settings.transport == TransportMode.CURL:
-            if not settings.api_base_url:
+    def _validate_settings(self):
+        if self._settings.transport == TransportMode.CURL:
+            if not self._settings.api_base_url:
                 raise RuntimeError("API base URL required.")
-            if not settings.cert_thumbprint:
+            if not self._settings.cert_thumbprint:
                 raise RuntimeError("cert thumbprint required.")
 
     def certificate_service(self):
