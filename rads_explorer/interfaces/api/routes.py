@@ -36,7 +36,15 @@ def cert_requests():
 
 @router.get("/health")
 def health():
-    return {"status": "ok"}
+    container = get_container()
+    settings = container._settings
+    return {
+        "status": "ok",
+        "transport": settings.transport,
+        "api_base_url": str(settings.api_base_url),
+        "curl_path": str(settings.curl_path),
+        "cert_thumbprint_set": bool(settings.cert_thumbprint),
+    }
 
 
 @router.get("/search/certificates")
@@ -68,3 +76,30 @@ def export_expiring(days: int = 30):
     path = EXPORTS_DIR / "expiring.xlsx"
     container.exporter().export(report, path)
     return {"file": str(path)}
+
+
+@router.get("/debug/config")
+def debug_config():
+    container = get_container()
+    settings = container._settings
+    return {
+        "env": settings.env,
+        "transport": settings.transport,
+        "api_base_url": str(settings.api_base_url),
+        "api_version": settings.api_version,
+        "timeout": settings.timeout,
+        "verify_tls": settings.verify_tls,
+        "debug_http": settings.debug_http,
+        "curl_path": str(settings.curl_path),
+        "cert_thumbprint": settings.cert_thumbprint[:8] + "...",
+    }
+
+
+@router.get("/debug/transport")
+def debug_transport():
+    container = get_container()
+    t = container._transport
+    return {
+        "type": type(t).__name__,
+        "api_base_url": str(container._settings.api_base_url),
+    }

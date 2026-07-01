@@ -29,7 +29,3 @@ markers = [
     "real: requires CryptoPro curl transport or external system",
     "integration: end-to-end flows",
 ]
-
-
-[project.scripts]
-ra-probe = "tools.probe:main"

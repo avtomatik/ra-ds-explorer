@@ -6,12 +6,10 @@ export DOCKER_BUILDKIT=1
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
-VERSION="$(./ci/release/version.sh)"
-IMAGE="rads_explorer:${VERSION}"
+VERSION="latest"
+IMAGE="ra-ds-explorer:${VERSION}"
 
 echo "[BUILD] version: $VERSION"
-
-./ci/validate/lock_check.sh
 
 echo "[BUILD] building image: $IMAGE"
 

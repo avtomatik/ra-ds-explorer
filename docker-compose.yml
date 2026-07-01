@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  rads-explorer:
+    image: ra-ds-explorer:latest
+    container_name: ra-ds-explorer
+
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+
+    ports:
+      - "8000:8000"
+
+    environment:
+      # =========================================================================
+      # Core config
+      # =========================================================================
+      RADS_ENV: "prod"
+      RADS_TRANSPORT: "curl"
+
+      # API target (IMPORTANT: must be reachable from container)
+      RADS_API_BASE_URL: "https://SERVICE_HOST"
+
+      # CryptoPro certificate thumbprint
+      RADS_CERT_THUMBPRINT: "8e989f99c289e90d6d0a46b49ccd35e00d4accbd"
+
+      # Path to CryptoPro curl INSIDE container
+      RADS_CURL_PATH: "/opt/cprocsp/bin/amd64/curl"
+
+      RADS_TIMEOUT: 30
+      RADS_VERIFY_TLS: "false"
+      RADS_DEBUG_HTTP: "false"
+
+    volumes:
+      - /opt/cprocsp:/opt/cprocsp:ro
+
+      # Persist exports
+      - ./exports:/app/exports
+
+      # Optional logs
+      - ./logs:/app/logs
+
+    restart: always
