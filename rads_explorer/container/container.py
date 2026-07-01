@@ -17,6 +17,7 @@ from rads_explorer.infrastructure.transport.cryptopro_curl import \
     CryptoProCurlTransport
 from rads_explorer.infrastructure.transport.fixture_transport import \
     FixtureTransport
+from rads_explorer.infrastructure.transport.http import HTTPTransport
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +42,9 @@ class Container:
 
             case TransportMode.CURL:
                 return CryptoProCurlTransport(self._settings)
+
+            case TransportMode.HTTP:
+                return HTTPTransport(self._settings)
 
             case _:
                 raise ValueError(
