@@ -12,15 +12,15 @@ class NameAttributes(APIModel):
     common_name: str | None = Field(None, validation_alias=OID.CN)
     surname: str | None = Field(None, validation_alias=OID.SN)
     given_name: str | None = Field(None, validation_alias=OID.GIVEN_NAME)
-    country: str | None = Field(None, validation_alias=OID.C)
-    locality: str | None = Field(None, validation_alias=OID.L)
-    organization: str | None = Field(None, validation_alias=OID.O)
-    organization_unit: str | None = Field(None, validation_alias=OID.OU)
+    country_name: str | None = Field(None, validation_alias=OID.C)
+    locality_name: str | None = Field(None, validation_alias=OID.L)
+    organization_name: str | None = Field(None, validation_alias=OID.O)
+    organizational_unit_name: str | None = Field(None, validation_alias=OID.OU)
 
     inn: str | None = Field(None, validation_alias=OID.INN)
     guid: str | None = Field(None, validation_alias=OID.GUID)
     snils: str | None = Field(None, validation_alias=OID.SNILS)
-    email: str | None = Field(None, validation_alias=OID.EMAIL_PKCS)
+    email: str | None = Field(None, validation_alias=OID.EMAIL_ADDRESS)
     upn: str | None = Field(None, validation_alias=OID.USER_PRINCIPAL_NAME)
 
     def raw(self) -> dict[str, Any]:

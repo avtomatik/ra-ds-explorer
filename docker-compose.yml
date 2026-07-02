@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   rads-explorer:
     image: ra-ds-explorer:latest
