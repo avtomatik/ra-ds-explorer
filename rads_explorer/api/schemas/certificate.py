@@ -52,6 +52,11 @@ class Certificate(APIModel):
         None, validation_alias="rawCertificate"
     )
 
+    revocation_reason: str | None = Field(
+        None, validation_alias="revocationReason"
+    )
+    revoked_when: datetime | None = Field(None, validation_alias="revokedWhen")
+
     folder: str | None = None
 
     @cached_property

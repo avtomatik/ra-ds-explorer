@@ -17,8 +17,11 @@ class NameAttributes(APIModel):
     given_name: str | None = Field(None, validation_alias=OID.GIVEN_NAME)
     country_name: str | None = Field(None, validation_alias=OID.C)
     locality_name: str | None = Field(None, validation_alias=OID.L)
+    state_or_province_name: str | None = Field(None, validation_alias=OID.S)
+    street_address: str | None = Field(None, validation_alias=OID.STREET)
     organization_name: str | None = Field(None, validation_alias=OID.O)
     organizational_unit_name: str | None = Field(None, validation_alias=OID.OU)
+    title: str | None = Field(None, validation_alias=OID.T)
     # =========================================================================
     # Russian subject attributes
     # =========================================================================

@@ -1,3 +1,4 @@
+from dataclasses import asdict
 from pathlib import Path
 
 from openpyxl import Workbook
@@ -22,10 +23,10 @@ class XLSXExporter:
             else:
                 first = data[0]
 
-                ws.append(list(first.model_dump().keys()))
+                ws.append(list(asdict(first).keys()))
 
                 for item in data:
-                    ws.append(list(item.model_dump().values()))
+                    ws.append(list(asdict(item).values()))
 
         # =====================================================================
         # DICT REPORTS
