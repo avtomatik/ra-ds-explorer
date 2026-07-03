@@ -6,6 +6,46 @@ from rads_explorer.container.container import get_container
 router = APIRouter()
 
 
+@router.get("/health")
+def health():
+    container = get_container()
+    settings = container._settings
+    return {
+        "status": "ok",
+        "transport": settings.transport,
+        "api_base_url": str(settings.api_base_url),
+        "curl_path": str(settings.curl_path),
+        "cert_thumbprint_set": bool(settings.cert_thumbprint),
+    }
+
+
+@router.get("/debug/config")
+def debug_config():
+    container = get_container()
+    settings = container._settings
+    return {
+        "env": settings.env,
+        "transport": settings.transport,
+        "api_base_url": str(settings.api_base_url),
+        "api_version": settings.api_version,
+        "timeout": settings.timeout,
+        "verify_tls": settings.verify_tls,
+        "debug_http": settings.debug_http,
+        "curl_path": str(settings.curl_path),
+        "cert_thumbprint": settings.cert_thumbprint[:8] + "...",
+    }
+
+
+@router.get("/debug/transport")
+def debug_transport():
+    container = get_container()
+    t = container._transport
+    return {
+        "type": type(t).__name__,
+        "api_base_url": str(container._settings.api_base_url),
+    }
+
+
 @router.get("/certificates")
 def certificates():
     container = get_container()
@@ -34,19 +74,6 @@ def cert_requests():
     return service.list_requests().model_dump(by_alias=True)
 
 
-@router.get("/health")
-def health():
-    container = get_container()
-    settings = container._settings
-    return {
-        "status": "ok",
-        "transport": settings.transport,
-        "api_base_url": str(settings.api_base_url),
-        "curl_path": str(settings.curl_path),
-        "cert_thumbprint_set": bool(settings.cert_thumbprint),
-    }
-
-
 @router.get("/search/certificates")
 def search_certificates(q: str):
     container = get_container()
@@ -61,6 +88,13 @@ def expiring(days: int = 30):
     return report_service.expiring_certificates_report(days).data
 
 
+@router.get("/reports/certificates-inventory")
+def certificates_inventory():
+    container = get_container()
+    report_service = container.report_service()
+    return report_service.certificates_inventory_report().data
+
+
 @router.get("/export/expiring.xlsx")
 def export_expiring(days: int = 30):
     container = get_container()
@@ -71,28 +105,11 @@ def export_expiring(days: int = 30):
     return {"file": str(path)}
 
 
-@router.get("/debug/config")
-def debug_config():
+@router.get("/export/certificates-inventory.xlsx")
+def export_certificates_inventory():
     container = get_container()
-    settings = container._settings
-    return {
-        "env": settings.env,
-        "transport": settings.transport,
-        "api_base_url": str(settings.api_base_url),
-        "api_version": settings.api_version,
-        "timeout": settings.timeout,
-        "verify_tls": settings.verify_tls,
-        "debug_http": settings.debug_http,
-        "curl_path": str(settings.curl_path),
-        "cert_thumbprint": settings.cert_thumbprint[:8] + "...",
-    }
-
-
-@router.get("/debug/transport")
-def debug_transport():
-    container = get_container()
-    t = container._transport
-    return {
-        "type": type(t).__name__,
-        "api_base_url": str(container._settings.api_base_url),
-    }
+    report_service = container.report_service()
+    report = report_service.certificates_inventory_report()
+    path = EXPORTS_DIR / "certificates-inventory.xlsx"
+    container.exporter().export(report, path)
+    return {"file": str(path)}

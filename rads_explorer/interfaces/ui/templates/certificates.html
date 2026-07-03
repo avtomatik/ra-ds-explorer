@@ -35,8 +35,8 @@
 
     {% for c in certs %}
     <tr>
-      <td>{{ c.serial }}</td>
-      <td>{{ c.issuer }}</td>
+      <td>{{ c.serial_number }}</td>
+      <td>{{ c.name_attributes.common_name }}</td>
       <td>{{ c.not_before }}</td>
       <td>{{ c.not_after }}</td>
     </tr>
