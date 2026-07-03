@@ -6,7 +6,6 @@ logger = logging.getLogger(__name__)
 
 
 class DemoFlow:
-
     def __init__(
         self,
         certificate_service,

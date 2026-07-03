@@ -7,7 +7,6 @@ from rads_explorer.data.reports_models import CertificateReportRow
 
 
 class CertificateMapper:
-
     def __init__(self, inspector):
         self.inspector = inspector
 

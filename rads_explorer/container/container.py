@@ -2,21 +2,17 @@ import logging
 from functools import lru_cache
 
 from rads_explorer.api.client import RADSClient
-from rads_explorer.application.cert_request_service import CertRequestService
+from rads_explorer.application.cert_request_service import \
+    CertificateRequestService
 from rads_explorer.application.certificate_service import CertificateService
 from rads_explorer.application.search_service import SearchService
 from rads_explorer.application.user_service import UserService
 from rads_explorer.config.enums import TransportMode
-from rads_explorer.config.paths import FIXTURES_DIR
 from rads_explorer.config.settings import Settings
 from rads_explorer.data.export.xlsx import XLSXExporter
 from rads_explorer.data.reports import ReportService
-from rads_explorer.infrastructure.fixtures.router import FixtureRouter
-from rads_explorer.infrastructure.fixtures.store import FixtureStore
 from rads_explorer.infrastructure.transport.cryptopro_curl import \
     CryptoProCurlTransport
-from rads_explorer.infrastructure.transport.fixture_transport import \
-    FixtureTransport
 from rads_explorer.infrastructure.transport.http import HTTPTransport
 
 logger = logging.getLogger(__name__)
@@ -35,11 +31,6 @@ class Container:
 
     def _build_transport(self):
         match self._settings.transport:
-            case TransportMode.FIXTURE:
-                store = FixtureStore(FIXTURES_DIR)
-                router = FixtureRouter(store)
-                return FixtureTransport(router)
-
             case TransportMode.CURL:
                 return CryptoProCurlTransport(self._settings)
 
@@ -62,7 +53,7 @@ class Container:
         return CertificateService(self._client)
 
     def cert_request_service(self):
-        return CertRequestService(self._client)
+        return CertificateRequestService(self._client)
 
     def user_service(self):
         return UserService(self._client)

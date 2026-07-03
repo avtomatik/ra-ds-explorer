@@ -10,7 +10,6 @@ from rads_explorer.infrastructure.transport.validators import (ensure_json,
 
 
 class CertificatesApi:
-
     def __init__(self, transport):
         self.transport = transport
 
@@ -42,8 +41,7 @@ class CertificatesApi:
         return parse_certificates(data)
 
 
-class CertRequestsApi:
-
+class CertificateRequestsApi:
     def __init__(self, transport):
         self.transport = transport
 
@@ -59,7 +57,6 @@ class CertRequestsApi:
 
 
 class UsersApi:
-
     def __init__(self, transport):
         self.transport = transport
 
@@ -75,9 +72,8 @@ class UsersApi:
 
 
 class RADSClient:
-
     def __init__(self, transport):
         self.transport = transport
         self.certificates = CertificatesApi(transport)
-        self.cert_requests = CertRequestsApi(transport)
+        self.cert_requests = CertificateRequestsApi(transport)
         self.users = UsersApi(transport)

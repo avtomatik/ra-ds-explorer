@@ -47,30 +47,28 @@ def test_xlsx_export(tmp_path: Path):
 
 
 def test_xlsx_exporter_generates_valid_report(tmp_path: Path):
-    row = [
-        CertificateReportRow(
-            ogrn="123",
-            organization_name="TestOrg",
-            guid="gid-1",
-            surname="Ivanov",
-            given_name="Ivan Ivanovich",
-            organizational_unit_name="IT",
-            title="Engineer",
-            common_name="Ivanov I.I.",
-            serial_number="ABC123",
-            snils="999",
-            status="VALID",
-            certificate_template="1.2.3",
-            revoked_when=None,
-            not_before="2024-01-01T00:00:00Z",
-            not_after="2025-01-01T00:00:00Z",
-        )
-    ]
+    row = CertificateReportRow(
+        ogrn="123",
+        organization_name="TestOrg",
+        guid="gid-1",
+        surname="Ivanov",
+        given_name="Ivan Ivanovich",
+        organizational_unit_name="IT",
+        title="Engineer",
+        common_name="Ivanov I.I.",
+        serial_number="ABC123",
+        snils="999",
+        status="VALID",
+        certificate_template="1.2.3",
+        revoked_when=None,
+        not_before="2024-01-01T00:00:00Z",
+        not_after="2025-01-01T00:00:00Z",
+    )
 
     report = Report(
         name="test_report",
         generated_at="2024-01-01T00:00:00Z",
-        data=row,
+        data=[row],
     )
 
     output_file = tmp_path / "report.xlsx"

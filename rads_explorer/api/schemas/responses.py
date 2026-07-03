@@ -7,7 +7,7 @@ from .pages import Links
 from .user import User
 
 
-class CertRequestsResponse(APIModel):
+class CertificateRequestsResponse(APIModel):
     items: list[CertificateRequest]
     links: Links = Field(validation_alias="_links")
 

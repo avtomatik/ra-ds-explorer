@@ -1,7 +1,7 @@
 from rads_explorer.api.schemas.cert_request import CertificateRequest
 from rads_explorer.api.schemas.certificate import Certificate
-from rads_explorer.api.schemas.responses import (CertificatesResponse,
-                                                 CertRequestsResponse,
+from rads_explorer.api.schemas.responses import (CertificateRequestsResponse,
+                                                 CertificatesResponse,
                                                  UsersResponse)
 from rads_explorer.api.schemas.user import User
 from rads_explorer.application.exceptions import (APIContractError,
@@ -30,7 +30,7 @@ def parse_cert_request(data):
 
 
 def parse_cert_requests(data):
-    return _parse(CertRequestsResponse, data)
+    return _parse(CertificateRequestsResponse, data)
 
 
 def parse_cert_request_detail(data):

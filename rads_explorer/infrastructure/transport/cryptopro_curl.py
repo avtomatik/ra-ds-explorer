@@ -10,7 +10,6 @@ from rads_explorer.infrastructure.transport.response import HTTPResponse
 
 
 class CryptoProCurlTransport:
-
     def __init__(self, settings: Settings):
         self.settings = settings
 

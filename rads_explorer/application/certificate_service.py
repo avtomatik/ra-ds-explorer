@@ -1,5 +1,4 @@
 class CertificateService:
-
     def __init__(self, api_client):
         self.api = api_client
 

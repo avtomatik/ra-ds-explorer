@@ -16,7 +16,7 @@ router = APIRouter()
 
 
 @router.get("/ui", response_class=HTMLResponse)
-def home():
+def home(num_items: int = 20):
     container = get_container()
     certs = container.certificate_service().list_certificates()
 
@@ -28,7 +28,7 @@ def home():
             <ul>
     """
 
-    for c in certs.items[:20]:
+    for c in certs.items[:num_items]:
         html += f"<li>{c.serial_number} - {c.name_attributes.common_name}</li>"
 
     html += """
