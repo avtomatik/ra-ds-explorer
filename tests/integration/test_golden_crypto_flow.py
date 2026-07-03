@@ -1,32 +1,21 @@
 import os
 
-import pytest
-
-from rads_explorer.application.cert_request_service import CertRequestService
 from rads_explorer.application.certificate_service import CertificateService
-from rads_explorer.application.user_service import UserService
 from rads_explorer.data.export.xlsx import XLSXExporter
-from rads_explorer.data.reports import Reports
+from rads_explorer.data.reports import ReportService
 
 
-@pytest.mark.real
 def test_golden_crypto_flow(client, tmp_path):
     """
     End-to-end validation:
     CryptoPro curl transport → domain services → report → XLSX export
     """
 
-    os.environ["RADS_TRANSPORT"] = "curl"
+    os.environ["RADS_TRANSPORT"] = "http"
 
     certificate_service = CertificateService(client)
-    cert_request_service = CertRequestService(client)
-    user_service = UserService(client)
 
-    reports = Reports(
-        certificate_service=certificate_service,
-        cert_request_service=cert_request_service,
-        user_service=user_service,
-    )
+    reports = ReportService(certificate_service=certificate_service)
 
     exporter = XLSXExporter()
 
@@ -47,10 +36,10 @@ def test_golden_crypto_flow(client, tmp_path):
     # 2. Reports (REAL DATA PATH)
     # =========================================================================
     expiring = reports.expiring_certificates_report(days=365)
-    issuer_report = reports.issuer_report()
+    certificates_inventory_report = reports.certificates_inventory_report()
 
     assert expiring is not None
-    assert issuer_report is not None
+    assert certificates_inventory_report is not None
 
     # =========================================================================
     # 3. XLSX Export (critical validation)

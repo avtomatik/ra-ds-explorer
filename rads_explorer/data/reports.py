@@ -17,8 +17,25 @@ class ReportService:
         self.certificate_service = certificate_service
         self.mapper = CertificateMapper(inspector=X509Inspector())
 
+    def _get_certificates(self):
+        return self.certificate_service.list_certificates().items
+
+    def _get_mapped_certificates(self, certificates):
+        return [self.mapper.map(c) for c in certificates]
+
+    def certificates_inventory_report(self):
+        certificates = self._get_certificates()
+
+        mapped = self._get_mapped_certificates(certificates)
+
+        return Report(
+            name="certificates_inventory",
+            generated_at=datetime.now(timezone.utc),
+            data=mapped,
+        )
+
     def expiring_certificates_report(self, days: int):
-        certificates = self.certificate_service.list_certificates().items
+        certificates = self._get_certificates()
 
         threshold = datetime.now(timezone.utc) + timedelta(days=days)
 
@@ -30,17 +47,4 @@ class ReportService:
             name=f"expiring_{days}_days",
             generated_at=datetime.now(timezone.utc),
             data=mapped,
-        )
-
-    def issuer_report(self):
-        certificates = self.certificate_service.list_certificates().items
-
-        result = {}
-        for c in certificates:
-            result[c.issuer] = result.get(c.issuer, 0) + 1
-
-        return Report(
-            name="issuer_distribution",
-            generated_at=datetime.now(timezone.utc),
-            data=result,
         )

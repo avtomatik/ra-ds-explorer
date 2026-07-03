@@ -30,7 +30,7 @@ class CertificateMapper:
             serial_number=certificate.serial_number,
             snils=self.inspector.subject(cert_x509, NameOID.SNILS),
             status=certificate.status,
-            CERTIFICATE_TEMPLATE=self.inspector.certificate_template_oid(
+            certificate_template=self.inspector.certificate_template_oid(
                 cert_x509
             ),
             revoked_when=certificate.revoked_when,

@@ -74,7 +74,7 @@ class DemoFlow:
         if len(expiring.data) > 0:
             logger.info("Expiring: %d", len(expiring.data))
 
-            issuer = self.reports.issuer_report()
+            issuer = self.reports.certificates_inventory_report()
 
             logger.info("Issuers: %s", issuer.data)
 

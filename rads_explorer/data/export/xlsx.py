@@ -1,9 +1,22 @@
 from dataclasses import asdict
+from datetime import datetime, timezone
 from pathlib import Path
 
 from openpyxl import Workbook
 
 from rads_explorer.data.reports import Report
+
+
+class CellSerializer:
+    @staticmethod
+    def serialize(value):
+        if isinstance(value, datetime):
+            return (
+                value.astimezone(timezone.utc)
+                .isoformat()
+                .replace("+00:00", "Z")
+            )
+        return value
 
 
 class XLSXExporter:
@@ -26,7 +39,11 @@ class XLSXExporter:
                 ws.append(list(asdict(first).keys()))
 
                 for item in data:
-                    ws.append(list(asdict(item).values()))
+                    row = [
+                        CellSerializer.serialize(v)
+                        for v in asdict(item).values()
+                    ]
+                    ws.append(row)
 
         # =====================================================================
         # DICT REPORTS
@@ -34,6 +51,6 @@ class XLSXExporter:
         elif isinstance(data, dict):
             ws.append(["key", "value"])
             for k, v in data.items():
-                ws.append([k, v])
+                ws.append([k, CellSerializer.serialize(v)])
 
         wb.save(output)

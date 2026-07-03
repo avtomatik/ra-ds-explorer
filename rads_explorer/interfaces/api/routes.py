@@ -61,13 +61,6 @@ def expiring(days: int = 30):
     return report_service.expiring_certificates_report(days).data
 
 
-@router.get("/reports/issuer")
-def issuer_report():
-    container = get_container()
-    report_service = container.report_service()
-    return report_service.issuer_report().data
-
-
 @router.get("/export/expiring.xlsx")
 def export_expiring(days: int = 30):
     container = get_container()
