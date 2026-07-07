@@ -1,15 +1,15 @@
-
+from dataclasses import asdict
 
 from PySide6.QtCore import QAbstractTableModel, Qt
-from dataclasses import asdict
 
 
 class CertificateTableModel(QAbstractTableModel):
-
     def __init__(self, rows=None):
         super().__init__()
         self._rows = rows or []
-        self._columns = list(asdict(self._rows[0]).keys()) if self._rows else []
+        self._columns = (
+            list(asdict(self._rows[0]).keys()) if self._rows else []
+        )
 
     def set_data(self, rows):
         self.beginResetModel()

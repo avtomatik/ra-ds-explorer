@@ -1,14 +1,14 @@
-from PySide6.QtWidgets import (
-    QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-    QLineEdit, QPushButton, QTableView, QLabel, QTextEdit, QMessageBox
-)
+from PySide6.QtWidgets import (QHBoxLayout, QLabel, QLineEdit, QMainWindow,
+                               QMessageBox, QPushButton, QTableView, QTextEdit,
+                               QVBoxLayout, QWidget)
 
-from rads_explorer.interfaces.qt.controllers.certificate_controller import CertificateController
-from rads_explorer.interfaces.qt.models.certificate_table_model import CertificateTableModel
+from rads_explorer.interfaces.qt.controllers.certificate_controller import \
+    CertificateController
+from rads_explorer.interfaces.qt.models.certificate_table_model import \
+    CertificateTableModel
 
 
 class MainWindow(QMainWindow):
-
     def __init__(self, certificate_service):
         super().__init__()
 
@@ -33,7 +33,9 @@ class MainWindow(QMainWindow):
         search_row = QHBoxLayout()
 
         self.search_input = QLineEdit()
-        self.search_input.setPlaceholderText("Search certificates (CN, serial, thumbprint...)")
+        self.search_input.setPlaceholderText(
+            "Search certificates (CN, serial, thumbprint...)"
+        )
 
         self.search_btn = QPushButton("Search")
         self.search_btn.clicked.connect(self.search)

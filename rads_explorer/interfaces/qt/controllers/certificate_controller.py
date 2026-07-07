@@ -1,5 +1,4 @@
-from dataclasses import asdict
-from PySide6.QtCore import QObject, Signal, QThread
+from PySide6.QtCore import QObject, QThread, Signal
 
 from rads_explorer.application.certificate_mapper import CertificateMapper
 from rads_explorer.application.x509_inspector import X509Inspector
