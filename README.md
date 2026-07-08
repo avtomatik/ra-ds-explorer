@@ -289,9 +289,9 @@ Example:
 ```env
 RADS_TRANSPORT=curl
 
-RADS_API_BASE_URL=https://ra.example.local
+RADS_API_BASE_URL=https://service-host
 
-RADS_CURL_PATH=/opt/cprocsp/bin/amd64/curl
+RADS_CURL_PATH=/opt/product/bin/amd64/curl
 
 RADS_CERT_THUMBPRINT=<certificate-thumbprint>
 ```

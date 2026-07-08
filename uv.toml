@@ -1,4 +1,3 @@
-[tool.uv]
 # Proxy settings for network access
-http-proxy  = "http://mirror.com:0000"
-https-proxy = "http://mirror.com:0000"
+http-proxy  = "http://fffff.fffffff.fffff:0000"
+https-proxy = "http://fffff.fffffff.fffff:0000"

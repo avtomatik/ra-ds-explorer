@@ -119,12 +119,20 @@ class CryptoProCurlTransport:
             url += "?" + urlencode(params, doseq=True)
         return url
 
-    def _split_response(self, raw: str):
-        parts = raw.split("\r\n\r\n", 1)
+    def _split_response(self, raw: str) -> tuple[str, str]:
+        assert raw.startswith(
+            "HTTP/1."
+        ), "Expected an HTTP response produced by curl -i"
 
-        if len(parts) != 2:
-            return "", raw
-        return parts
+        separator = "\n\n"
+
+        assert separator in raw, "Missing HTTP header separator."
+
+        headers, body = raw.split(separator, 1)
+
+        assert body, "HTTP body is empty."
+
+        return headers, body
 
     def _parse_headers(self, block: str):
         result = {}

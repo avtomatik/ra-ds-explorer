@@ -1,4 +1,10 @@
-FROM python:3.12-slim
+ARG PYTHON_REGISTRY=ffff-fff-fff-ffff-fff-ffffff.ffff.fff.fffffff.fffff/ffff-ffffff
+ARG APP_USER=fffffffffffffffffff
+ARG APP_UID=0000
+ARG APP_GID=0000
+ARG HTTPS_PROXY=fffff.fffffff.fffff:0000
+
+FROM ${PYTHON_REGISTRY}/python:3.12-slim
 
 ENV PYTHONUNBUFFERED=1
 
@@ -10,13 +16,26 @@ RUN apt-get update && \
     ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir uv
+RUN groupadd --gid ${APP_GID} ${APP_USER} && \
+    useradd --uid ${APP_UID} \
+            --gid ${APP_GID} \
+            --create-home \
+            --shell /bin/bash \
+            ${APP_USER}
 
 COPY pyproject.toml uv.lock uv.toml README.md ./
+
+RUN pip install --no-cache-dir --proxy ${HTTPS_PROXY} uv 
 
 RUN uv sync --frozen --no-dev
 
 COPY rads_explorer ./rads_explorer
+
+COPY html ./html
+
+RUN chown -R ${APP_USER}:${APP_USER} /app
+
+USER ${APP_USER}
 
 EXPOSE 8000
 

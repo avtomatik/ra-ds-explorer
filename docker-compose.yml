@@ -6,37 +6,30 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
+      args:
+        HTTPS_PROXY: ${HTTPS_PROXY}
 
     ports:
       - "8000:8000"
 
+    env_file:
+      - .env
+
     environment:
-      # =========================================================================
-      # Core config
-      # =========================================================================
-      RADS_ENV: "prod"
-      RADS_TRANSPORT: "curl"
-
-      # API target (IMPORTANT: must be reachable from container)
-      RADS_API_BASE_URL: "https://SERVICE_HOST"
-
-      # CryptoPro certificate thumbprint
-      RADS_CERT_THUMBPRINT: "8e989f99c289e90d6d0a46b49ccd35e00d4accbd"
-
-      # Path to CryptoPro curl INSIDE container
-      RADS_CURL_PATH: "/opt/cprocsp/bin/amd64/curl"
-
-      RADS_TIMEOUT: 30
-      RADS_VERIFY_TLS: "false"
-      RADS_DEBUG_HTTP: "false"
+      RADS_ENV: ${RADS_ENV}
+      RADS_CURL_PATH: ${RADS_CURL_PATH}
+      RADS_CERT_THUMBPRINT: ${RADS_CERT_THUMBPRINT}
+      RADS_TRANSPORT: ${RADS_TRANSPORT}
+      RADS_TIMEOUT: ${RADS_TIMEOUT}
+      RADS_VERIFY_TLS: ${RADS_VERIFY_TLS}
+      RADS_API_BASE_URL: ${RADS_API_BASE_URL}
+      RADS_DEBUG_HTTP: ${RADS_DEBUG_HTTP}
 
     volumes:
-      - /opt/cprocsp:/opt/cprocsp:ro
-
-      # Persist exports
+      - /opt/product:/opt/product:ro
+      - /etc/opt/product:/etc/opt/product:ro
+      - /var/opt/product:/var/opt/product
       - ./exports:/app/exports
-
-      # Optional logs
       - ./logs:/app/logs
 
     restart: always
