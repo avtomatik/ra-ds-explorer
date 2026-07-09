@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 
-from rads_explorer.application.certificate_mapper import CertificateMapper
+from rads_explorer.application.certificate_mapper import \
+    CertificateDetailMapper
 from rads_explorer.application.x509_inspector import X509Inspector
 
 
@@ -15,7 +16,7 @@ class Report:
 class ReportService:
     def __init__(self, certificate_service):
         self.certificate_service = certificate_service
-        self.mapper = CertificateMapper(inspector=X509Inspector())
+        self.mapper = CertificateDetailMapper(inspector=X509Inspector())
 
     def _get_certificates(self):
         return self.certificate_service.list_certificates().items

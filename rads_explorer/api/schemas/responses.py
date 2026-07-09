@@ -2,7 +2,7 @@ from pydantic import Field
 
 from .base import APIModel
 from .cert_request import CertificateRequest
-from .certificate import Certificate
+from .certificate import CertificateSummary
 from .pages import Links
 from .user import User
 
@@ -13,7 +13,7 @@ class CertificateRequestsResponse(APIModel):
 
 
 class CertificatesResponse(APIModel):
-    items: list[Certificate]
+    items: list[CertificateSummary]
     links: Links = Field(validation_alias="_links")
 
 

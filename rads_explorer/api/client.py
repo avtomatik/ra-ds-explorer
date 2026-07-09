@@ -37,6 +37,16 @@ class CertificatesApi:
 
     def search(self, query):
         response = self.transport.get(CERTIFICATES, params={"value": query})
+        # =====================================================================
+        # Search Options
+        # =====================================================================
+        # =====================================================================
+        # {"filter": "test"}
+        # {"q": "test"}
+        # {"query": "test"}
+        # {"search": "test"}
+        # {"text": "test"}
+        # =====================================================================
         data = ensure_json(ensure_success(response))
         return parse_certificates(data)
 

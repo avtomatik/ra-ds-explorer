@@ -1,5 +1,5 @@
 from rads_explorer.api.schemas.cert_request import CertificateRequest
-from rads_explorer.api.schemas.certificate import Certificate
+from rads_explorer.api.schemas.certificate import CertificateDetail
 from rads_explorer.api.schemas.responses import (CertificateRequestsResponse,
                                                  CertificatesResponse,
                                                  UsersResponse)
@@ -22,7 +22,7 @@ def parse_certificates(data):
 
 
 def parse_certificate_detail(data):
-    return _parse(Certificate, data)
+    return _parse(CertificateDetail, data)
 
 
 def parse_cert_request(data):

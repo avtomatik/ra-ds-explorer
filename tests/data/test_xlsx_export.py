@@ -4,11 +4,11 @@ from openpyxl import load_workbook
 
 from rads_explorer.data.export.xlsx import XLSXExporter
 from rads_explorer.data.reports import Report
-from rads_explorer.data.reports_models import CertificateReportRow
+from rads_explorer.data.reports_models import CertificateDetailReportRow
 
 
 def test_xlsx_export(tmp_path: Path):
-    row = CertificateReportRow(
+    row = CertificateDetailReportRow(
         ogrn="123",
         organization_name="Org",
         guid="gid",
@@ -47,7 +47,7 @@ def test_xlsx_export(tmp_path: Path):
 
 
 def test_xlsx_exporter_generates_valid_report(tmp_path: Path):
-    row = CertificateReportRow(
+    row = CertificateDetailReportRow(
         ogrn="123",
         organization_name="TestOrg",
         guid="gid-1",

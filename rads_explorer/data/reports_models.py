@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 @dataclass
-class CertificateReportRow:
+class CertificateDetailReportRow:
     ogrn: str | None
     organization_name: str | None
     guid: str | None

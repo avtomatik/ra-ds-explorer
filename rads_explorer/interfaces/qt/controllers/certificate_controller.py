@@ -1,6 +1,7 @@
 from PySide6.QtCore import QObject, QThread, Signal
 
-from rads_explorer.application.certificate_mapper import CertificateMapper
+from rads_explorer.application.certificate_mapper import \
+    CertificateDetailMapper
 from rads_explorer.application.x509_inspector import X509Inspector
 
 
@@ -18,7 +19,7 @@ class CertificateWorker(QThread):
             result = self.service.search(self.query)
 
             inspector = X509Inspector()
-            mapper = CertificateMapper(inspector)
+            mapper = CertificateDetailMapper(inspector)
 
             rows = [mapper.map(c) for c in result.items]
 
