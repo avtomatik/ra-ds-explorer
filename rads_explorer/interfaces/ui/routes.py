@@ -1,5 +1,7 @@
+from pathlib import Path
+
 from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from rads_explorer.config.paths import TEMPLATE_DIR
@@ -18,7 +20,8 @@ router = APIRouter()
 @router.get("/ui", response_class=HTMLResponse)
 def home(num_items: int = 20):
     container = get_container()
-    certs = container.certificate_service().list_certificates()
+
+    rows = container.report_service.build_certificates_inventory()
 
     html = """
     <html>
@@ -28,7 +31,7 @@ def home(num_items: int = 20):
             <ul>
     """
 
-    for c in certs.items[:num_items]:
+    for c in rows[:num_items]:
         html += f"<li>{c.serial_number} - {c.name_attributes.common_name}</li>"
 
     html += """
@@ -43,10 +46,11 @@ def home(num_items: int = 20):
 @router.get("/ui/certificates", response_class=HTMLResponse)
 def certificates(request: Request):
     container = get_container()
-    certs = container.certificate_service().list_certificates().items
+
+    rows = container.report_service.build_certificates_inventory()
 
     template = jinja_env.get_template("certificates.html")
-    html = template.render(request=request, certs=certs)
+    html = template.render(request=request, certs=rows)
     return HTMLResponse(content=html)
 
 
@@ -58,3 +62,23 @@ def expiring(request: Request, days: int = 30):
     template = jinja_env.get_template("report_expiring.html")
     html = template.render(request=request, report=report)
     return HTMLResponse(content=html)
+
+
+@router.get("/ui/reports/inventory")
+def inventory_report():
+
+    container = get_container()
+
+    report = container.report_service.certificates_inventory_report()
+
+    output = Path("/tmp/certificates_inventory.xlsx")
+
+    container.xlsx_exporter.export(
+        report,
+        output,
+    )
+
+    return FileResponse(
+        output,
+        filename="certificates_inventory.xlsx",
+    )

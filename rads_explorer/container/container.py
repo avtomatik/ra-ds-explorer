@@ -2,11 +2,14 @@ import logging
 from functools import lru_cache
 
 from rads_explorer.api.client import RADSClient
-from rads_explorer.application.cert_request_service import \
+from rads_explorer.application.cache.certificate_details import \
+    CertificateDetailCache
+from rads_explorer.application.services.cert_request_service import \
     CertificateRequestService
-from rads_explorer.application.certificate_service import CertificateService
-from rads_explorer.application.search_service import SearchService
-from rads_explorer.application.user_service import UserService
+from rads_explorer.application.services.certificate_service import \
+    CertificateService
+from rads_explorer.application.services.search_service import SearchService
+from rads_explorer.application.services.user_service import UserService
 from rads_explorer.config.enums import TransportMode
 from rads_explorer.config.settings import Settings
 from rads_explorer.data.export.xlsx import XLSXExporter
@@ -25,6 +28,7 @@ class Container:
 
         self._transport = self._build_transport()
         self._client = RADSClient(self._transport)
+        self._certificate_cache = CertificateDetailCache()
 
         logger.info("Transport mode: %s", self._settings.transport)
         logger.info("API base URL: %s", self._settings.api_base_url)
@@ -49,8 +53,9 @@ class Container:
             if not self._settings.cert_thumbprint:
                 raise RuntimeError("cert thumbprint required.")
 
+    @lru_cache
     def certificate_service(self):
-        return CertificateService(self._client)
+        return CertificateService(self._client, self._certificate_cache)
 
     def cert_request_service(self):
         return CertificateRequestService(self._client)

@@ -13,9 +13,9 @@ class Repository:
     def list_certificates(self):
         return self.ds.certificates
 
-    def get_certificate(self, serial: str):
+    def get_certificate(self, serial_number: str):
         return next(
-            c for c in self.ds.certificates if c.serial_number == serial
+            c for c in self.ds.certificates if c.serial_number == serial_number
         )
 
     # =========================================================================

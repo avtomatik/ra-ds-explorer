@@ -19,21 +19,22 @@ class ReportService:
         self.mapper = CertificateDetailMapper(inspector=X509Inspector())
 
     def _get_certificates(self):
-        return self.certificate_service.list_certificates().items
+        return self.certificate_service.list().items
 
     def _get_mapped_certificates(self, certificates):
         return [self.mapper.map(c) for c in certificates]
 
     def certificates_inventory_report(self):
-        certificates = self._get_certificates()
-
-        mapped = self._get_mapped_certificates(certificates)
-
         return Report(
             name="certificates_inventory",
             generated_at=datetime.now(timezone.utc),
-            data=mapped,
+            data=self.build_certificates_inventory(),
         )
+
+    def build_certificates_inventory(self):
+        return [
+            self.mapper.map(c) for c in self.certificate_service.iter_details()
+        ]
 
     def expiring_certificates_report(self, days: int):
         certificates = self._get_certificates()

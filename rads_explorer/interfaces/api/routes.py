@@ -50,14 +50,21 @@ def debug_transport():
 def certificates():
     container = get_container()
     service = container.certificate_service()
-    return service.list_certificates().model_dump(by_alias=True)
+    return service.list().model_dump(by_alias=True)
 
 
-@router.get("/certificates/{serial}")
-def get_certificate(serial: str):
+@router.get("/certificates/serialNumber/{serial_number}")
+def get_certificate_by_serial(serial_number: str):
     container = get_container()
     service = container.certificate_service()
-    return service.get_certificate(serial)
+    return service.detail_by_serial(serial_number)
+
+
+@router.get("/certificates/{certificate_id}")
+def get_certificate_by_id(certificate_id: str):
+    container = get_container()
+    service = container.certificate_service()
+    return service.detail_by_id(certificate_id)
 
 
 @router.get("/users")
@@ -92,7 +99,7 @@ def expiring(days: int = 30):
 def certificates_inventory():
     container = get_container()
     report_service = container.report_service()
-    return report_service.certificates_inventory_report().data
+    return report_service.build_certificates_inventory()
 
 
 @router.get("/export/expiring.xlsx")

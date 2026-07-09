@@ -1,11 +1,12 @@
 import os
 
-from rads_explorer.application.certificate_service import CertificateService
+from rads_explorer.application.services.certificate_service import \
+    CertificateService
 from rads_explorer.data.export.xlsx import XLSXExporter
 from rads_explorer.data.reports import ReportService
 
 
-def test_golden_crypto_flow(client, tmp_path):
+def test_golden_crypto_flow(client, detail_cache, tmp_path):
     """
     End-to-end validation:
     CryptoPro curl transport → domain services → report → XLSX export
@@ -13,7 +14,7 @@ def test_golden_crypto_flow(client, tmp_path):
 
     os.environ["RADS_TRANSPORT"] = "http"
 
-    certificate_service = CertificateService(client)
+    certificate_service = CertificateService(client, detail_cache)
 
     reports = ReportService(certificate_service=certificate_service)
 
@@ -22,13 +23,13 @@ def test_golden_crypto_flow(client, tmp_path):
     # =========================================================================
     # 1. Fetch real data
     # =========================================================================
-    certificates = certificate_service.list_certificates()
+    certificates = certificate_service.list()
     assert certificates is not None
     assert len(certificates.items) > 0
 
     first_cert = certificates.items[0]
 
-    detail = certificate_service.get_certificate(first_cert.serial_number)
+    detail = certificate_service.detail_by_serial(first_cert.serial_number)
     assert detail.serial_number == first_cert.serial_number
     assert detail.x509 is not None
 

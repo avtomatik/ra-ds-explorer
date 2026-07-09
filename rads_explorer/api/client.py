@@ -30,8 +30,13 @@ class CertificatesApi:
     def list_all(self):
         return list(self.iter_all())
 
-    def get_by_serial(self, serial: str):
-        response = self.transport.get(certificate_by_serial(serial))
+    def get_by_id(self, certificate_id: str):
+        response = self.transport.get(f"{CERTIFICATES}/{certificate_id}")
+        data = ensure_json(ensure_success(response))
+        return parse_certificate_detail(data)
+
+    def get_by_serial(self, serial_number: str):
+        response = self.transport.get(certificate_by_serial(serial_number))
         data = ensure_json(ensure_success(response))
         return parse_certificate_detail(data)
 

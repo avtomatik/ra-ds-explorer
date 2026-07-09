@@ -34,7 +34,7 @@ class MainWindow(QMainWindow):
 
         self.search_input = QLineEdit()
         self.search_input.setPlaceholderText(
-            "Search certificates (CN, serial, thumbprint...)"
+            "Search certificates (CN, serial_number, thumbprint...)"
         )
 
         self.search_btn = QPushButton("Search")
